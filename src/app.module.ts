@@ -9,7 +9,7 @@ import { ReservationsModule } from './reservations/reservations.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
-import { User } from './users/entities/user.entity'
+import { User } from './users/entities/user.entity';
 import { Returning } from './returns/entities/return.entity';
 import { Lending } from './lendings/entities/lending.entity';
 import { Book } from './books/entities/book.entity';
