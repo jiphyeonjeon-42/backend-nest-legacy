@@ -13,22 +13,33 @@ import { Reservation } from 'src/reservations/entities/reservation.entity';
 
 @Entity()
 export class User {
+  constructor(login: string, intra: number) {
+    this.login = login;
+    this.intra = intra;
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  intra: string;
+  login: string;
 
   @Column()
+  intra: number;
+
+  @Column({ default: '0' })
   slack: string;
 
-  @Column()
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  penaltiyAt: Date;
+
+  @Column({ default: 0 })
   lendingCnt: number;
 
-  @Column()
+  @Column({ default: 0 })
   reservationCnt: number;
 
-  @Column()
+  @Column({ default: false })
   librarian: boolean;
 
   @CreateDateColumn()
