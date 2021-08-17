@@ -15,6 +15,7 @@ import { Lending } from './lendings/entities/lending.entity';
 import { Book } from './books/entities/book.entity';
 import { BookInfo } from './books/entities/bookInfo.entity';
 import { Reservation } from './reservations/entities/reservation.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { Reservation } from './reservations/entities/reservation.entity';
     UsersModule,
     BooksModule,
     ReservationsModule,
+    AuthModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -33,6 +35,7 @@ import { Reservation } from './reservations/entities/reservation.entity';
       database: process.env.DATABASE_NAME,
       entities: [User, Returning, Lending, Book, BookInfo, Reservation],
       synchronize: true,
+      autoLoadEntities: true,
     }),
   ],
   controllers: [AppController],
