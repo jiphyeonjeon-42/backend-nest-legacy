@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 
 import { Book } from './book.entity';
+import { Exclude, Expose, Type, Transform } from 'class-transformer';
 
 @Entity()
 export class BookInfo {
@@ -35,9 +36,11 @@ export class BookInfo {
   @Column({ type: 'date' })
   publishedAt: Date;
 
+  @Exclude()
   @CreateDateColumn()
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn()
   updatedAt: Date;
 
