@@ -7,7 +7,8 @@ import { UsersModule } from './users/users.module';
 import { BooksModule } from './books/books.module';
 import { ReservationsModule } from './reservations/reservations.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import configuration from './config/configuration';
 
 import { User } from './users/entities/user.entity';
 import { Returning } from './returns/entities/return.entity';
@@ -25,17 +26,21 @@ import { AuthModule } from './auth/auth.module';
     BooksModule,
     ReservationsModule,
     AuthModule,
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DATABASE_HOST,
-      port: 3306,
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      entities: [User, Returning, Lending, Book, BookInfo, Reservation],
-      synchronize: true,
-      autoLoadEntities: true,
+    ConfigModule.forRoot({ load: [configuration], isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get('database.host'),
+        port: configService.get('database.port'),
+        username: configService.get('database.username'),
+        password: configService.get('database.password'),
+        database: configService.get('database.name'),
+        entities: [User, Returning, Lending, Book, BookInfo, Reservation],
+        synchronize: true,
+        autoLoadEntities: true,
+      }),
     }),
   ],
   controllers: [AppController],
