@@ -31,7 +31,6 @@ export class UsersService {
     const existingUser = await this.userRepository.findOne({
       where: { intra: user.id },
     });
-    console.log(existingUser);
     if (!existingUser) return 'save';
     return 'find';
   }
