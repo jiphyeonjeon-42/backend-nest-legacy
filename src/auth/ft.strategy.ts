@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-42';
 
@@ -15,11 +16,11 @@ export class UserInfo {
 
 @Injectable()
 export class FtStrategy extends PassportStrategy(Strategy, 'ftSeoul') {
-  constructor() {
+  constructor(private readonly configService: ConfigService) {
     super({
-      clientID: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: process.env.REDIRECT_URL,
+      clientID: configService.get('client.id'),
+      clientSecret: configService.get('client.secret'),
+      callbackURL: configService.get('client.redirect_url'),
     });
   }
 

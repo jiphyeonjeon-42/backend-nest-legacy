@@ -22,8 +22,8 @@ export interface ftTypes {
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  async login(user: any) {
-    const payload = { aud: user.id, sub: user.login };
+  async jwtGen(user: any) {
+    const payload = { username: user.login, sub: user.id };
     return this.jwtService.sign(payload);
   }
 

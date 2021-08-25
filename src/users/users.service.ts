@@ -4,8 +4,6 @@ import { ftTypes } from 'src/auth/auth.service';
 import { UserRepository } from './user.repository';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersController } from './users.controller';
-import { getRepository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -33,11 +31,11 @@ export class UsersService {
     const existingUser = await this.userRepository.findOne({
       where: { intra: user.id },
     });
-    console.log(existingUser);
     if (!existingUser) return 'save';
     return 'find';
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
