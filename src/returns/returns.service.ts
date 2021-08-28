@@ -8,12 +8,7 @@ import { Returning } from './entities/return.entity';
 @Injectable()
 export class ReturnsService {
   create(createReturnDto: CreateReturnDto) {
-    const connection = getConnection();
-    const returnRepository = getRepository(Returning);
-    const lendingRepository = getRepository(Lending);
-    returnRepository.insert({
-      condition: '양호',
-    });
+
     return 'This action adds a new return';
   }
 

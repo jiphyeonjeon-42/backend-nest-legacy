@@ -8,23 +8,6 @@ import { User } from 'src/users/entities/user.entity';
 @Injectable()
 export class LendingsService {
   async create() {
-    const connection = getConnection();
-    const bookRepository = connection.getRepository(Book);
-    const lendingRepository = connection.getRepository(Lending);
-
-    const user1 = new User('minkykim', 1);
-    bookRepository
-      .createQueryBuilder('book')
-      .where('book.id = :bookId', { bookId: 1 })
-      .getOne()
-      .then((bookData) => {
-        lendingRepository.insert({
-          book: bookData,
-          condition: '양호',
-          user: user1,
-        });
-      });
-
     return 'This action adds a new lending';
   }
 
