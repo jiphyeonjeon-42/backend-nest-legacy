@@ -8,7 +8,6 @@ import {
   Delete,
 } from '@nestjs/common';
 import { LendingsService } from './lendings.service';
-import { CreateLendingDto } from './dto/create-lending.dto';
 import { UpdateLendingDto } from './dto/update-lending.dto';
 
 @Controller('lendings')
@@ -16,8 +15,8 @@ export class LendingsController {
   constructor(private readonly lendingsService: LendingsService) {}
 
   @Post()
-  create(@Body() createLendingDto: CreateLendingDto) {
-    return this.lendingsService.create(createLendingDto);
+  create() {
+    return this.lendingsService.create();
   }
 
   @Get()

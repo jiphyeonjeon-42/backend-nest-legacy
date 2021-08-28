@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ReturnsService } from './returns.service';
 import { CreateReturnDto } from './dto/create-return.dto';
@@ -25,9 +26,9 @@ export class ReturnsController {
     return this.returnsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.returnsService.findOne(+id);
+  @Get()
+  findOne(@Query('bookId') bookId: string, @Query('cadetId') cadetId: string) {
+    return this.returnsService.findOne(+bookId, +cadetId);
   }
 
   @Patch(':id')
