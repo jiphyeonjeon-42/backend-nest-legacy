@@ -11,7 +11,6 @@ import {
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
 
-
 @Injectable()
 export class BooksService {
   constructor(
@@ -23,7 +22,7 @@ export class BooksService {
 
   create(createBookDto: CreateBookDto) {
     return 'This action adds a new book';
-  } 
+  }
 
   async search(options: IPaginationOptions) {
     return paginate(this.bookInfosRepository, options);
