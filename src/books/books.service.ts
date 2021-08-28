@@ -5,7 +5,6 @@ import { getConnection } from 'typeorm';
 import { Book } from './entities/book.entity';
 import { BookInfo } from './entities/bookInfo.entity';
 
-// TODO : enum사용
 function setBookDatas(bookData) {
   for (const book of bookData.books) {
     if (book.status == 1) book.status = '비치중';
@@ -21,7 +20,6 @@ function setBookDatas(bookData) {
 @Injectable()
 export class BooksService {
   async create() {
-    // lending table에 데이터 삽입
     const connection = getConnection();
     const book1 = new Book();
     book1.donator = '김민경';

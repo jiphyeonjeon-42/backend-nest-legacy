@@ -20,7 +20,6 @@ export class BooksController {
     return this.booksService.create();
   }
 
-  // @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   findAll() {
     return this.booksService.findAll();

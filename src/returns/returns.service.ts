@@ -22,7 +22,6 @@ export class ReturnsService {
   }
 
   findOne(bookId: number, cadetId: number) {
-    // TODO : lending테이블에서 해당되는 엔티티 가져오기
     const connection = getConnection();
     const lendingRepository = connection.getRepository(Lending);
     lendingRepository
