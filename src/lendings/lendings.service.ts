@@ -1,19 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLendingDto } from './dto/create-lending.dto';
 import { UpdateLendingDto } from './dto/update-lending.dto';
+import { getConnection } from 'typeorm';
+import { Lending } from './entities/lending.entity';
+import { Book } from 'src/books/entities/book.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class LendingsService {
-  create(createLendingDto: CreateLendingDto) {
+  async create() {
     return 'This action adds a new lending';
   }
 
   findAll() {
+    const connection = getConnection();
+    connection
+      .getRepository(Lending)
+      .find({ relations: ['book'] })
+      .then((lendingData) => {
+      });
     return `This action returns all lendings`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} lending`;
+  findOne(lendingId: number) {
+    const connection = getConnection();
+    connection
+      .getRepository(Lending)
+      .findOne({ where: { id: lendingId }, relations: ['book'] })
+      .then((bookData) => {
+      });
+    return `This action returns a #${lendingId} lending`;
   }
 
   update(id: number, updateLendingDto: UpdateLendingDto) {
