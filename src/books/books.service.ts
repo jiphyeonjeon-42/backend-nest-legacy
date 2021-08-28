@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UpdateBookDto } from './dto/update-book.dto';
-//
-import { getConnection } from 'typeorm';
-import { Book } from './entities/book.entity';
 import { BookInfo } from './entities/bookInfo.entity';
+import { Book } from './entities/book.entity';
+import {
+  paginate,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
+import { getConnection } from 'typeorm';
+
 
 function setBookDatas(bookData) {
   for (const book of bookData.books) {
@@ -19,15 +25,24 @@ function setBookDatas(bookData) {
 
 @Injectable()
 export class BooksService {
+   constructor(
+    @InjectRepository(BookInfo)
+    private bookInfosRepository: Repository<BookInfo>,
+    @InjectRepository(Book)
+    private booksRepository: Repository<Book>,
+  ) {}
+
   async create() {
-    
     return 'This action adds a new book';
+  }
+
+  async search(options: IPaginationOptions) {
+    return paginate(this.bookInfosRepository, options);
   }
 
   async findAll() {
     const connection = getConnection();
     return connection.manager.find(BookInfo);
-    // return (connection.getRepository(Book).find({relations:['info', 'lendings']}));
   }
 
   async findOne(bookInfoId: number) {
