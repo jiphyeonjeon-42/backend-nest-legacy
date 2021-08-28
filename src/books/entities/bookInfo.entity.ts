@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 import { Book } from './book.entity';
-import { Exclude, Expose, Type, Transform } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 
 @Entity()
 export class BookInfo {
@@ -46,4 +46,13 @@ export class BookInfo {
 
   @OneToMany(() => Book, (book) => book.info)
   books: Book[];
+
+  @Expose({ name: 'donators' })
+  getDonators() {
+    const donators: string[] = [];
+    for (const book of this.books) {
+      donators.push(book.donator);
+    }
+    return donators.join(', ');
+  }
 }

@@ -13,7 +13,6 @@ import {
   ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 //
@@ -70,8 +69,8 @@ export class BooksController {
   }
 
   @Post()
-  create(@Body() createBookDto: CreateBookDto) {
-    return this.booksService.create(createBookDto);
+  create() {
+    return this.booksService.create();
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -86,7 +85,8 @@ export class BooksController {
     });
   }
 
-  @Get(':id')
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get('info/:id')
   findOne(@Param('id') id: string) {
     return this.booksService.findOne(+id);
   }
