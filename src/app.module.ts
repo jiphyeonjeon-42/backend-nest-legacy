@@ -17,6 +17,7 @@ import { Book } from './books/entities/book.entity';
 import { BookInfo } from './books/entities/bookInfo.entity';
 import { Reservation } from './reservations/entities/reservation.entity';
 import { AuthModule } from './auth/auth.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { AuthModule } from './auth/auth.module';
         autoLoadEntities: true,
       }),
     }),
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
