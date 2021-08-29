@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  ParseUUIDPipe,
   Query,
   DefaultValuePipe,
   UseInterceptors,

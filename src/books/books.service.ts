@@ -6,7 +6,6 @@ import { BookInfo } from './entities/bookInfo.entity';
 import { Book } from './entities/book.entity';
 import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { getConnection } from 'typeorm';
-import { query } from 'express';
 
 function setBookDatas(bookData) {
   for (const book of bookData.books) {
