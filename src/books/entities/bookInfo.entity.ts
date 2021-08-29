@@ -47,8 +47,10 @@ export class BookInfo {
   @OneToMany(() => Book, (book) => book.info)
   books: Book[];
 
-  @Expose({ name: 'donators' })
-  getDonators() {
+  @Expose({
+    groups: ['detail'],
+  })
+  get donators() {
     const donators: string[] = [];
     for (const book of this.books) {
       donators.push(book.donator);

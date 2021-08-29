@@ -4,12 +4,9 @@ import { Repository } from 'typeorm';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { BookInfo } from './entities/bookInfo.entity';
 import { Book } from './entities/book.entity';
-import {
-  paginate,
-  IPaginationOptions,
-} from 'nestjs-typeorm-paginate';
+import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { getConnection } from 'typeorm';
-
+import { query } from 'express';
 
 function setBookDatas(bookData) {
   for (const book of bookData.books) {
@@ -25,7 +22,7 @@ function setBookDatas(bookData) {
 
 @Injectable()
 export class BooksService {
-   constructor(
+  constructor(
     @InjectRepository(BookInfo)
     private bookInfosRepository: Repository<BookInfo>,
     @InjectRepository(Book)
@@ -61,6 +58,22 @@ export class BooksService {
         return tBookData;
       });
     return resultData;
+  }
+
+  async findInfo(options: IPaginationOptions, sort: string) {
+    let queryBuilder = this.bookInfosRepository.createQueryBuilder('bookInfo');
+    if (sort === 'new') {
+      queryBuilder = queryBuilder.orderBy('bookInfo.createdAt', 'DESC');
+    } else if (sort === 'popular') {
+      queryBuilder = queryBuilder
+        .leftJoin('bookInfo.books', 'book')
+        .leftJoin('book.lendings', 'lending')
+        .groupBy('bookInfo.id')
+        .orderBy('COUNT(lending.id)', 'DESC');
+    } else {
+      queryBuilder = queryBuilder.orderBy('bookInfo.createdAt', 'ASC');
+    }
+    return paginate(queryBuilder, options);
   }
 
   async update(id: number, updateBookDto: UpdateBookDto) {

@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  ParseUUIDPipe,
   Query,
   DefaultValuePipe,
   UseInterceptors,
   ClassSerializerInterceptor,
+  SerializeOptions,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -85,10 +87,20 @@ export class BooksController {
     });
   }
 
+  @SerializeOptions({ groups: ['detail'] })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('info/:id')
   findOne(@Param('id') id: string) {
     return this.booksService.findOne(+id);
+  }
+
+  @Get('info/')
+  async findInfo(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+    @Query('sort') sort: string = 'new',
+  ) {
+    return this.booksService.findInfo({ page, limit }, sort);
   }
 
   @Patch(':id')
