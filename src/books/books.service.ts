@@ -70,7 +70,7 @@ export class BooksService {
         .groupBy('bookInfo.id')
         .orderBy('COUNT(lending.id)', 'DESC');
     } else {
-      queryBuilder = queryBuilder.orderBy('bookInfo.createdAt', 'ASC');
+      queryBuilder = queryBuilder.orderBy('bookInfo.createdAt', 'DESC');
     }
     return paginate(queryBuilder, options);
   }
