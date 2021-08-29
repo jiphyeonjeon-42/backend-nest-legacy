@@ -51,8 +51,7 @@ export class Book {
     if (this.id % 2) {
       const tDate = new Date();
       return tDate.toJSON().substring(2, 10).split('-').join('.');
-    }
-    else {
+    } else {
       return null;
     }
   }

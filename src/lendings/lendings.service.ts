@@ -16,8 +16,7 @@ export class LendingsService {
     connection
       .getRepository(Lending)
       .find({ relations: ['book'] })
-      .then((lendingData) => {
-      });
+      .then((lendingData) => {});
     return `This action returns all lendings`;
   }
 
@@ -26,8 +25,7 @@ export class LendingsService {
     connection
       .getRepository(Lending)
       .findOne({ where: { id: lendingId }, relations: ['book'] })
-      .then((bookData) => {
-      });
+      .then((bookData) => {});
     return `This action returns a #${lendingId} lending`;
   }
 
