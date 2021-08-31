@@ -8,7 +8,6 @@ import { Returning } from './entities/return.entity';
 @Injectable()
 export class ReturnsService {
   create(createReturnDto: CreateReturnDto) {
-
     return 'This action adds a new return';
   }
 
