@@ -17,6 +17,7 @@ import { Book } from './books/entities/book.entity';
 import { BookInfo } from './books/entities/bookInfo.entity';
 import { Reservation } from './reservations/entities/reservation.entity';
 import { AuthModule } from './auth/auth.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -40,8 +41,11 @@ import { AuthModule } from './auth/auth.module';
         entities: [User, Returning, Lending, Book, BookInfo, Reservation],
         synchronize: true,
         autoLoadEntities: true,
+        seeds: ['src/seeds/**/*{.ts,.js}'],
+        factories: ['src/factories/**/*{.ts,.js}'],
       }),
     }),
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
