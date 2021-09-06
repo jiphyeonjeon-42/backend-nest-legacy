@@ -35,7 +35,7 @@ export class BooksService {
   }
 
   async search(query: string, page: number, limit: number) {
-    return this.searchService.searchBook(query, page - 1, limit);
+    return this.searchService.searchBook(query, limit * (page - 1), limit);
   }
 
   async findAll() {
