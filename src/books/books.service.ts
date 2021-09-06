@@ -6,6 +6,7 @@ import { BookInfo } from './entities/bookInfo.entity';
 import { Book } from './entities/book.entity';
 import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { getConnection } from 'typeorm';
+import { SearchService } from 'src/search/search.service';
 
 function setBookDatas(bookData) {
   for (const book of bookData.books) {
@@ -26,14 +27,15 @@ export class BooksService {
     private bookInfosRepository: Repository<BookInfo>,
     @InjectRepository(Book)
     private booksRepository: Repository<Book>,
+    private searchService: SearchService,
   ) {}
 
   async create() {
     return 'This action adds a new book';
   }
 
-  async search(options: IPaginationOptions) {
-    return paginate(this.bookInfosRepository, options);
+  async search(query: string, page: number, limit: number) {
+    return this.searchService.searchBook(query, page - 1, limit);
   }
 
   async findAll() {

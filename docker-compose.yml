@@ -1,0 +1,22 @@
+version: "3.3"
+services:
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: "1234"
+      MYSQL_DATABASE: "jiphyeonjeon"
+  backend:
+    build: .
+    command: "npm run start:prod"
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db
+      - els
+  els:
+    build: "elasticsearch/."
+    environment:
+      discovery.type: single-node
+    
+
