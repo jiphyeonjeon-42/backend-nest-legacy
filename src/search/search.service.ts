@@ -110,6 +110,7 @@ export class SearchService {
       name: bucket.key,
       count: bucket.doc_count,
     }));
+    categories.unshift({ name: '전체', count: totalItems });
     return {
       items,
       categories,
