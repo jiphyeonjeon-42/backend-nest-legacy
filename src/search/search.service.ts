@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { any, number } from 'joi';
 import { BookInfo } from 'src/books/entities/bookInfo.entity';
 
 @Injectable()
@@ -27,7 +26,7 @@ export class SearchService {
               book_analyzer: {
                 type: 'custom',
                 tokenizer: 'book_tokenizer',
-                filter: ['nori_part_of_speech'],
+                filter: ['lowercase', 'asciifolding', 'nori_part_of_speech'],
               },
             },
           },
@@ -40,6 +39,12 @@ export class SearchService {
             title: {
               type: 'text',
               analyzer: 'book_analyzer',
+              fielddata: true,
+              fields: {
+                keyword: {
+                  type: 'keyword',
+                },
+              },
             },
             author: {
               type: 'text',
@@ -59,6 +64,12 @@ export class SearchService {
             publishedAt: {
               type: 'date',
             },
+            createdAt: {
+              type: 'date',
+            },
+            updatedAt: {
+              type: 'date',
+            },
           },
         },
       },
@@ -71,23 +82,57 @@ export class SearchService {
     });
   }
 
-  async searchBook(
-    query_word: string,
-    from: number,
-    size: number,
-    sort?: string,
-    category?: string,
-  ) {
-    const query: any = {
-      match: {
-        title: query_word,
-      },
-    };
-
+  async getCategoryAggs(query: any) {
     const searchResult = await this.elasticsearchService.search({
       index: 'book',
       body: {
         query,
+        aggs: {
+          group_by_category: {
+            terms: {
+              field: 'category',
+            },
+          },
+        },
+      },
+      size: 0,
+    });
+    const buckets: any[] =
+      searchResult.body['aggregations']['group_by_category']['buckets'];
+    const categories: any[] = buckets.flatMap((bucket) => ({
+      name: bucket.key,
+      count: bucket.doc_count,
+    }));
+    const totalItems: number = searchResult.body['hits']['total']['value'];
+    categories.unshift({ name: '전체', count: totalItems });
+    return categories;
+  }
+
+  async searchBook(
+    query_word: string,
+    from: number,
+    size: number,
+    sort?: any,
+    category?: string,
+  ) {
+    const query: any = {
+      bool: {
+        must: [
+          {
+            match: {
+              title: query_word,
+            },
+          },
+        ],
+      },
+    };
+    const categoryAggs = await this.getCategoryAggs(query);
+    if (category) query.bool.must.push({ match: { category } });
+    const searchResult = await this.elasticsearchService.search({
+      index: 'book',
+      body: {
+        query,
+        sort,
         aggs: {
           group_by_category: {
             terms: {
@@ -104,16 +149,9 @@ export class SearchService {
       (hit) => hit._source,
     );
     const totalItems: number = searchResult.body['hits']['total']['value'];
-    const buckets: any[] =
-      searchResult.body['aggregations']['group_by_category']['buckets'];
-    const categories: any[] = buckets.flatMap((bucket) => ({
-      name: bucket.key,
-      count: bucket.doc_count,
-    }));
-    categories.unshift({ name: '전체', count: totalItems });
     return {
       items,
-      categories,
+      categories: categoryAggs,
       meta: {
         totalItems,
         itemCount: items.length,

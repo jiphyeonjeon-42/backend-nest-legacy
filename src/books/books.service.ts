@@ -45,7 +45,7 @@ export class BooksService {
     if (sort === 'new') {
       sortOption = { publishedAt: 'desc' };
     } else if (sort === 'title') {
-      sortOption = { "title.keyword" : 'asc' };
+      sortOption = { 'title.keyword': 'asc' };
     } else if (sort === 'popular') {
       sort = undefined;
     } else {
