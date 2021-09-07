@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { LendingsService } from './lendings.service';
 import { UpdateLendingDto } from './dto/update-lending.dto';
@@ -15,8 +16,8 @@ export class LendingsController {
   constructor(private readonly lendingsService: LendingsService) {}
 
   @Post()
-  create() {
-    return this.lendingsService.create();
+  create(@Query('bookId') bookId: string, @Query('userId') userId: string) {
+    return this.lendingsService.create(+bookId, +userId);
   }
 
   @Get()
