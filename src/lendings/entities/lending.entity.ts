@@ -5,7 +5,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  OneToMany,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 
 import { User } from '../../users/entities/user.entity';
@@ -39,6 +40,7 @@ export class Lending {
   @ManyToOne(() => Book, (book) => book.lendings)
   book: Book;
 
-  @OneToMany(() => Returning, (returning) => returning.lending)
-  returnings: Returning[];
+  @OneToOne(() => Returning, (returning) => returning.lending)
+  @JoinColumn()
+  returning: Returning;
 }

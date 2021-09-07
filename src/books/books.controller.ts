@@ -95,11 +95,16 @@ export class BooksController {
 
   @Get('info/')
   async findInfo(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
-    @Query('sort') sort: string = 'new',
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Query('sort') sort = 'new',
   ) {
-    return this.booksService.findInfo({ page, limit }, sort);
+    try{
+      return this.booksService.findInfo({ page, limit }, sort);
+    }
+    catch(error){
+      return (error);
+    }
   }
 
   @Patch(':id')

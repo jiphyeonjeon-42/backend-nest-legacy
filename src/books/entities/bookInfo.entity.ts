@@ -50,11 +50,14 @@ export class BookInfo {
   @Expose({
     groups: ['detail'],
   })
-  get donators() {
-    const donators: string[] = [];
+
+  donators() {
+    const donators = new Set();
     for (const book of this.books) {
-      donators.push(book.donator);
+      if (book.donator != '') donators.add(book.donator);
     }
-    return donators.join(', ');
+    if (donators.size == 0) 
+      return "-";
+    return [...donators].join(', ');
   }
 }
