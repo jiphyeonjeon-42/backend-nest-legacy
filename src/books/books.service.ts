@@ -34,8 +34,30 @@ export class BooksService {
     return 'This action adds a new book';
   }
 
-  async search(query: string, page: number, limit: number) {
-    return this.searchService.searchBook(query, limit * (page - 1), limit);
+  async search(
+    query: string,
+    page: number,
+    limit: number,
+    sort: string,
+    category: string,
+  ) {
+    let sortOption: any = {};
+    if (sort === 'new') {
+      sortOption = { publishedAt: 'desc' };
+    } else if (sort === 'title') {
+      sortOption = { "title.keyword" : 'asc' };
+    } else if (sort === 'popular') {
+      sort = undefined;
+    } else {
+      sort = undefined;
+    }
+    return this.searchService.searchBook(
+      query,
+      limit * (page - 1),
+      limit,
+      sortOption,
+      category,
+    );
   }
 
   async findAll() {

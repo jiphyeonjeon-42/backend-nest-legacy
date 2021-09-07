@@ -15,15 +15,7 @@ import {
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { UpdateBookDto } from './dto/update-book.dto';
-//
-import { convertCSVToArray } from 'convert-csv-to-array';
-import { Repository } from 'typeorm';
-import { getRepository } from 'typeorm';
-import { Book } from 'src/books/entities/book.entity';
-import { BookInfo } from 'src/books/entities/bookInfo.entity';
-import * as fs from 'fs';
 import { SearchService } from 'src/search/search.service';
-import { query } from 'express';
 
 @Controller('books')
 export class BooksController {
@@ -41,9 +33,11 @@ export class BooksController {
   async search(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
-    @Query('query') query: string,
+    @Query('query') query: string = '',
+    @Query('sort') sort?: string,
+    @Query('category') category?: string,
   ) {
-    return this.booksService.search(query, page, limit);
+    return this.booksService.search(query, page, limit, sort, category);
   }
 
   @SerializeOptions({ groups: ['detail'] })
