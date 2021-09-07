@@ -8,8 +8,7 @@ import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { getConnection } from 'typeorm';
 
 async function setBookDatas(bookData) {
-  if (bookData == undefined)
-    throw new NotFoundException(bookData);
+  if (bookData == undefined) throw new NotFoundException(bookData);
   for (const book of bookData.books) {
     if (book.status == 1) book.status = '비치중';
     else if (book.status == 2) book.status = '대출중';
@@ -53,7 +52,7 @@ export class BooksService {
         relations: ['books', 'books.lendings', 'books.lendings.returning'],
       })
       .then((bookData) => {
-          return setBookDatas(bookData);
+        return setBookDatas(bookData);
       })
       .then((tBookData) => {
         return tBookData;

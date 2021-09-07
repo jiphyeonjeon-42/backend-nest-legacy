@@ -77,8 +77,8 @@ export class BooksController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/search')
   async search(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
   ): Promise<Pagination<BookInfo>> {
     return this.booksService.search({
       page,
@@ -99,11 +99,10 @@ export class BooksController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
     @Query('sort') sort = 'new',
   ) {
-    try{
+    try {
       return this.booksService.findInfo({ page, limit }, sort);
-    }
-    catch(error){
-      return (error);
+    } catch (error) {
+      return error;
     }
   }
 

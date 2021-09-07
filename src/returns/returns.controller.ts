@@ -32,7 +32,10 @@ export class ReturnsController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateReturnDto: UpdateReturnDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateReturnDto: UpdateReturnDto,
+  ) {
     return this.returnsService.update(+id, updateReturnDto);
   }
 

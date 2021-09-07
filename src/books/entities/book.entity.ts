@@ -11,7 +11,7 @@ import {
 import { BookInfo } from './bookInfo.entity';
 import { Reservation } from 'src/reservations/entities/reservation.entity';
 import { Lending } from '../../lendings/entities/lending.entity';
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 
 @Entity()
 export class Book {
@@ -48,11 +48,10 @@ export class Book {
 
   @Expose({ name: 'dueDate' })
   getDueDate() {
-    if(this.lendings.length == 0)
-      return ('-');
+    if (this.lendings.length == 0) return '-';
     for (const lending of this.lendings) {
       if (lending.returning) {
-        return ('-');
+        return '-';
       } else {
         const tDate = new Date(lending['createdAt']);
         tDate.setDate(tDate.getDate() + 15);
