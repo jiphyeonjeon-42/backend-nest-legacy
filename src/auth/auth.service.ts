@@ -23,7 +23,11 @@ export class AuthService {
   constructor(private jwtService: JwtService) {}
 
   async jwtGen(user: any) {
-    const payload = { username: user.login, sub: user.id };
+    const payload = {
+      username: user.login,
+      id: user.id,
+      image: user.image_url,
+    };
     return this.jwtService.sign(payload);
   }
 

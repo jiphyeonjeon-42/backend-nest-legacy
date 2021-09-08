@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService, ftTypes } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 import { Response } from 'express';
@@ -36,17 +36,32 @@ export class AuthController {
     res.status(302).redirect('/auth');
     if ((await this.userService.userSearch(ftUserInfo)) === 'find') {
       console.log('DB에 이미 있는 사람입니다.');
-      return;
+    } else {
+      console.log('DB에 없는 사람입니다.');
+      await this.userService.userSave(ftUserInfo);
     }
-    console.log('DB에 없는 사람입니다.');
-    await this.userService.userSave(ftUserInfo);
     return;
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  async profile() {
+  @Get('me')
+  async profile(@Req() req) {
+    console.log(req);
+    const { userId, username, userimage } = req.user;
+    const ftUserInfo = {
+      id: userId,
+      intra: username,
+      imageUrl: userimage,
+    };
+    console.log(ftUserInfo);
     return 'profile page';
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('logout') //나중에 Post로 바꿔야함.
+  async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
+    res.clearCookie('access_token');
+    res.redirect('/');
   }
 }
 
