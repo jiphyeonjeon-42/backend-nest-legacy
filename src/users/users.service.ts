@@ -15,7 +15,7 @@ export class UsersService {
   async findOne(id: string): Promise<User> {
     let user: User = null;
     try {
-      user = await this.userRepository.findOne(id);
+      user = await this.userRepository.findOne({ where: { intra: id } });
     } catch (e) {
       throw e;
     }

@@ -33,7 +33,8 @@ export class AuthController {
       httpOnly: true,
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     });
-    res.status(302).redirect('/auth');
+    res.status(302).redirect('.');
+    //res.status(302).redirect('http://localhost:80/auth');
     if ((await this.userService.userSearch(ftUserInfo)) === 'find') {
       console.log('DB에 이미 있는 사람입니다.');
     } else {
@@ -46,15 +47,17 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async profile(@Req() req) {
-    console.log(req);
-    const { userId, username, userimage } = req.user;
+    const { id, login, image } = req.user;
+    // find로 사서 확인
+    const findUser = await this.userService.findOne(id);
     const ftUserInfo = {
-      id: userId,
-      intra: username,
-      imageUrl: userimage,
+      id: id,
+      intra: login,
+      librarian: findUser.librarian,
+      imageUrl: image,
     };
     console.log(ftUserInfo);
-    return 'profile page';
+    return ftUserInfo;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -62,6 +65,7 @@ export class AuthController {
   async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token');
     res.redirect('/');
+    //res.status(302).redirect('http://localhost:80');
   }
 }
 
