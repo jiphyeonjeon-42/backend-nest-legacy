@@ -20,8 +20,9 @@ export class ReservationsController {
   async create(@Req() req) {
     const { id } = req.user;
     const user = await this.reservationsService.userJoinOne(id);
-    const book = await this.reservationsService.bookJoinOne(id);
+    const book = await this.reservationsService.bookJoinOne(1);
     console.log(user);
+    console.log(book);
     return 'reservations 생성 함수';
   }
 

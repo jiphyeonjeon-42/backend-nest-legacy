@@ -14,6 +14,7 @@ export class BookSeedService {
   ) {}
 
   async seed() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const bookInfos: any[] = require('./book-info.json');
     for (const bookInfo of bookInfos) {
       const categoryIdx: number = Math.floor(
