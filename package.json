@@ -31,6 +31,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/typeorm": "^8.0.1",
     "@nestjsplus/redirect": "^1.0.0",
+    "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "cookie-parser": "^1.4.5",
     "cross-env": "^7.0.3",
@@ -39,6 +40,7 @@
     "logger": "0.0.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
+    "nestjs-typeorm-paginate": "^2.6.2",
     "passport": "^0.4.1",
     "passport-42": "^1.2.6",
     "passport-jwt": "^4.0.0",
@@ -49,7 +51,7 @@
     "typeorm": "^0.2.36"
   },
   "devDependencies": {
-    "@nestjs/cli": "^8.0.0",
+    "@nestjs/cli": "^8.1.1",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@types/cookie-parser": "^1.4.2",
@@ -61,6 +63,7 @@
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
+    "convert-csv-to-array": "^1.0.3",
     "eslint": "^7.30.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",

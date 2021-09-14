@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 
 import { Book } from './book.entity';
+import { Exclude, Expose } from 'class-transformer';
 
 @Entity()
 export class BookInfo {
@@ -35,12 +36,26 @@ export class BookInfo {
   @Column({ type: 'date' })
   publishedAt: Date;
 
+  @Exclude()
   @CreateDateColumn()
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn()
   updatedAt: Date;
 
   @OneToMany(() => Book, (book) => book.info)
   books: Book[];
+
+  @Expose({
+    groups: ['detail'],
+  })
+  donators() {
+    const donators = new Set();
+    for (const book of this.books) {
+      if (book.donator != '') donators.add(book.donator);
+    }
+    if (donators.size == 0) return '-';
+    return [...donators].join(', ');
+  }
 }

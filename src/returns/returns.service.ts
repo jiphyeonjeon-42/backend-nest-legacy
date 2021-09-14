@@ -1,26 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Connection, getConnection, getRepository, Repository } from 'typeorm';
 import { CreateReturnDto } from './dto/create-return.dto';
 import { UpdateReturnDto } from './dto/update-return.dto';
+import { Returning } from './entities/return.entity';
 
 @Injectable()
 export class ReturnsService {
-  create(createReturnDto: CreateReturnDto) {
+  constructor(
+    @InjectRepository(Returning)
+    private readonly returnsRepository: Repository<Returning>,
+  ) {}
+
+  async create(bookId: number) {
     return 'This action adds a new return';
   }
 
-  findAll() {
+  async findAll() {
     return `This action returns all returns`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} return`;
+  async findOne(lendingId: number) {
+    return `This action returns one returns`;
   }
 
-  update(id: number, updateReturnDto: UpdateReturnDto) {
+  async update(id: number, updateReturnDto: UpdateReturnDto) {
     return `This action updates a #${id} return`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} return`;
   }
 }

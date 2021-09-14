@@ -61,7 +61,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('logout') //나중에 Post로 바꿔야함.
+  @Get('logout') // Post로 바꿔야함
   async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token');
     res.redirect('/');

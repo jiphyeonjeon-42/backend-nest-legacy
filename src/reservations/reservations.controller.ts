@@ -2,22 +2,27 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
+import { createQueryBuilder } from 'typeorm';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ReservationsService } from './reservations.service';
-import { CreateReservationDto } from './dto/create-reservation.dto';
-import { UpdateReservationDto } from './dto/update-reservation.dto';
 
 @Controller('reservations')
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
-  @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationsService.create(createReservationDto);
+  @UseGuards(JwtAuthGuard)
+  @Get() //Post로 바꿔야함
+  async create(@Req() req) {
+    const { id } = req.user;
+    const user = await this.reservationsService.userJoinOne(id);
+    const book = await this.reservationsService.bookJoinOne(id);
+    console.log(user);
+    return 'reservations 생성 함수';
   }
 
   @Get()
@@ -28,14 +33,6 @@ export class ReservationsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.reservationsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateReservationDto: UpdateReservationDto,
-  ) {
-    return this.reservationsService.update(+id, updateReservationDto);
   }
 
   @Delete(':id')

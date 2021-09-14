@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { ftTypes } from 'src/auth/auth.service';
 import { UserRepository } from './user.repository';
 import { User } from './entities/user.entity';
@@ -40,7 +39,7 @@ export class UsersService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  create(createUserDto: CreateUserDto) {
+  async create() {
     return 'This action adds a new user';
   }
 

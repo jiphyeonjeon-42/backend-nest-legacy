@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ReturnsService } from './returns.service';
 import { CreateReturnDto } from './dto/create-return.dto';
@@ -16,27 +17,30 @@ export class ReturnsController {
   constructor(private readonly returnsService: ReturnsService) {}
 
   @Post()
-  create(@Body() createReturnDto: CreateReturnDto) {
-    return this.returnsService.create(createReturnDto);
+  async create(@Query('bookId') bookId: string) {
+    return this.returnsService.create(+bookId);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.returnsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.returnsService.findOne(+id);
+  @Get(':lendingId')
+  async findOne(@Param('lendingId') lendingId: string) {
+    return this.returnsService.findOne(+lendingId);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReturnDto: UpdateReturnDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateReturnDto: UpdateReturnDto,
+  ) {
     return this.returnsService.update(+id, updateReturnDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.returnsService.remove(+id);
   }
 }

@@ -1,10 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLendingDto } from './dto/create-lending.dto';
 import { UpdateLendingDto } from './dto/update-lending.dto';
+import { Repository } from 'typeorm';
+import { Lending } from './entities/lending.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class LendingsService {
-  create(createLendingDto: CreateLendingDto) {
+  constructor(
+    @InjectRepository(Lending)
+    private readonly lendingsRepository: Repository<Lending>,
+  ) {}
+
+  async create(bookId: number, userId: number) {
     return 'This action adds a new lending';
   }
 
@@ -12,8 +19,8 @@ export class LendingsService {
     return `This action returns all lendings`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} lending`;
+  findOne(lendingId: number) {
+    return `This action returns a #${lendingId} lending`;
   }
 
   update(id: number, updateLendingDto: UpdateLendingDto) {
