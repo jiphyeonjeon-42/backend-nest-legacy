@@ -6,6 +6,7 @@ import { BookInfo } from './entities/bookInfo.entity';
 import { Book } from './entities/book.entity';
 import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { getConnection } from 'typeorm';
+import { SearchService } from 'src/search/search.service';
 
 async function setBookDatas(bookData) {
   if (bookData == undefined) throw new NotFoundException(bookData);
@@ -27,14 +28,37 @@ export class BooksService {
     private bookInfosRepository: Repository<BookInfo>,
     @InjectRepository(Book)
     private booksRepository: Repository<Book>,
+    private searchService: SearchService,
   ) {}
 
   async create() {
     return 'This action adds a new book';
   }
 
-  async search(options: IPaginationOptions) {
-    return paginate(this.bookInfosRepository, options);
+  async search(
+    query: string,
+    page: number,
+    limit: number,
+    sort: string,
+    category: string,
+  ) {
+    let sortOption: any = {};
+    if (sort === 'new') {
+      sortOption = { publishedAt: 'desc' };
+    } else if (sort === 'title') {
+      sortOption = { 'title.keyword': 'asc' };
+    } else if (sort === 'popular') {
+      sort = undefined;
+    } else {
+      sort = undefined;
+    }
+    return this.searchService.searchBook(
+      query,
+      limit * (page - 1),
+      limit,
+      sortOption,
+      category,
+    );
   }
 
   async findAll() {
