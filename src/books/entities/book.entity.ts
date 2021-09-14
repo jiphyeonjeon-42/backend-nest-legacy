@@ -25,6 +25,7 @@ export class Book {
   @Column()
   callSign: string;
 
+  @Exclude()
   @Column()
   status: number;
 
@@ -46,7 +47,7 @@ export class Book {
   @Exclude()
   lendings: Lending[];
 
-  @Expose({ name: 'dueDate' })
+  @Expose({ name: 'dueDate', groups: ['detail'] })
   getDueDate() {
     if (this.lendings.length == 0) return '-';
     for (const lending of this.lendings) {
@@ -58,5 +59,13 @@ export class Book {
         return tDate.toJSON().substring(2, 10).split('-').join('.');
       }
     }
+  }
+
+  @Expose({ name: 'status', groups: ['detail'] })
+  getStatus() {
+    if (this.status == 1) return '비치중';
+    else if (this.status == 2) return '대출중';
+    else if (this.status == 3) return '분실';
+    else if (this.status == 4) return '파손';
   }
 }

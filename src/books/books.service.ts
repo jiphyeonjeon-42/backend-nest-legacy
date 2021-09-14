@@ -8,19 +8,6 @@ import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { getConnection } from 'typeorm';
 import { SearchService } from 'src/search/search.service';
 
-async function setBookDatas(bookData) {
-  if (bookData == undefined) throw new NotFoundException(bookData);
-  for (const book of bookData.books) {
-    if (book.status == 1) book.status = '비치중';
-    else if (book.status == 2) book.status = '대출중';
-    else if (book.status == 3) book.status = '분실';
-    else if (book.status == 4) book.status = '파손';
-  }
-  const date = new Date(bookData.publishedAt);
-  bookData.publishedAt = date.getFullYear() + '년 ' + date.getMonth() + '월';
-  return bookData;
-}
-
 @Injectable()
 export class BooksService {
   constructor(
@@ -70,17 +57,12 @@ export class BooksService {
     const connection = getConnection();
     const bookInfoRepository = connection.getRepository(BookInfo);
 
-    return await bookInfoRepository
-      .findOne({
-        where: { id: bookInfoId },
-        relations: ['books', 'books.lendings', 'books.lendings.returning'],
-      })
-      .then((bookData) => {
-        return setBookDatas(bookData);
-      })
-      .then((tBookData) => {
-        return tBookData;
-      });
+    let bookData = await bookInfoRepository.findOne({
+      where: { id: bookInfoId },
+      relations: ['books', 'books.lendings', 'books.lendings.returning'],
+    });
+    if (bookData == undefined) throw new NotFoundException(bookData);
+    return bookData;
   }
 
   async findInfo(options: IPaginationOptions, sort: string) {
