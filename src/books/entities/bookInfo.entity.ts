@@ -67,15 +67,19 @@ export class BookInfo {
   @OneToMany(() => Book, (book) => book.info)
   books: Book[];
 
-  @Expose({
-    groups: ['detail'],
-  })
-  donators() {
+  @Expose({ name: 'donators', groups: ['detail'] })
+  getDonators() {
     const donators = new Set();
     for (const book of this.books) {
       if (book.donator != '') donators.add(book.donator);
     }
     if (donators.size == 0) return '-';
     return [...donators].join(', ');
+  }
+
+  @Expose({ name: 'publishedAt', groups: ['detail'] })
+  getDate() {
+    const date = new Date(this.publishedAt);
+    return date.getFullYear() + '년 ' + date.getMonth() + '월';
   }
 }
