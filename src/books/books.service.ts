@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -8,7 +8,8 @@ import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { getConnection } from 'typeorm';
 import { SearchService } from 'src/search/search.service';
 
-function setBookDatas(bookData) {
+async function setBookDatas(bookData) {
+  if (bookData == undefined) throw new NotFoundException(bookData);
   for (const book of bookData.books) {
     if (book.status == 1) book.status = '비치중';
     else if (book.status == 2) book.status = '대출중';
@@ -69,10 +70,10 @@ export class BooksService {
     const connection = getConnection();
     const bookInfoRepository = connection.getRepository(BookInfo);
 
-    const resultData = bookInfoRepository
+    return await bookInfoRepository
       .findOne({
         where: { id: bookInfoId },
-        relations: ['books', 'books.lendings'],
+        relations: ['books', 'books.lendings', 'books.lendings.returning'],
       })
       .then((bookData) => {
         return setBookDatas(bookData);
@@ -80,7 +81,6 @@ export class BooksService {
       .then((tBookData) => {
         return tBookData;
       });
-    return resultData;
   }
 
   async findInfo(options: IPaginationOptions, sort: string) {

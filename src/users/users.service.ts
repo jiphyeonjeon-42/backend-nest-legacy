@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { ftTypes } from 'src/auth/auth.service';
 import { UserRepository } from './user.repository';
 import { User } from './entities/user.entity';
@@ -15,11 +14,15 @@ export class UsersService {
   async findOne(id: string): Promise<User> {
     let user: User = null;
     try {
-      user = await this.userRepository.findOne(id);
+      user = await this.userRepository.findOne({ where: { intra: id } });
     } catch (e) {
       throw e;
     }
     return user;
+  }
+
+  async queryBuilder(alias: string) {
+    return this.userRepository.createQueryBuilder(alias);
   }
 
   async userSave(user: ftTypes): Promise<User | undefined> {
@@ -36,7 +39,7 @@ export class UsersService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  create(createUserDto: CreateUserDto) {
+  async create() {
     return 'This action adds a new user';
   }
 
