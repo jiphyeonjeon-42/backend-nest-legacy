@@ -3,17 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-42';
 
-export class UserInfo {
-  intra: number;
-  login: string;
-  image: string;
-  constructor(id: number, intraid: string, image: string) {
-    this.intra = id;
-    this.login = intraid;
-    this.image = image;
-  }
-}
-
 @Injectable()
 export class FtStrategy extends PassportStrategy(Strategy, 'ftSeoul') {
   constructor(private readonly configService: ConfigService) {

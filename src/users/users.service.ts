@@ -14,11 +14,15 @@ export class UsersService {
   async findOne(id: string): Promise<User> {
     let user: User = null;
     try {
-      user = await this.userRepository.findOne(id);
+      user = await this.userRepository.findOne({ where: { intra: id } });
     } catch (e) {
       throw e;
     }
     return user;
+  }
+
+  async queryBuilder(alias: string) {
+    return this.userRepository.createQueryBuilder(alias);
   }
 
   async userSave(user: ftTypes): Promise<User | undefined> {
