@@ -10,6 +10,17 @@ import {
 import { Book } from './book.entity';
 import { Exclude, Expose } from 'class-transformer';
 
+export enum BookCategory {
+  LANGUAGE = '프로그래밍 언어',
+  NETWORK = '네트워크',
+  WEB_PROGRAMMING = '웹 프로그래밍',
+  GAME_MOBILE = '게임개발/모바일',
+  OS_SYSTEM = '운영체제/컴퓨터시스템',
+  SOFTWARE_ENGINEERING = '소프트웨어 공학',
+  ALGORITHM = '자료구조/알고리즘',
+  TECH_CULTURE = '기술 교양',
+}
+
 @Entity()
 export class BookInfo {
   @PrimaryGeneratedColumn()
@@ -24,16 +35,25 @@ export class BookInfo {
   @Column()
   publisher: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   isbn: string;
 
   @Column()
   image: string;
 
-  @Column()
-  category: string;
+  @Column({
+    type: 'enum',
+    enum: BookCategory,
+    default: BookCategory.WEB_PROGRAMMING,
+  })
+  category: BookCategory;
 
-  @Column({ type: 'date' })
+  @Column({
+    type: 'date',
+    nullable: true,
+  })
   publishedAt: Date;
 
   @Exclude()

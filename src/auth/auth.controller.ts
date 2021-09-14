@@ -48,7 +48,6 @@ export class AuthController {
   @Get('me')
   async profile(@Req() req) {
     const { id, login, image } = req.user;
-    // find로 사서 확인
     const findUser = await this.userService.findOne(id);
     const ftUserInfo = {
       id: id,
@@ -61,7 +60,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('logout') // Post로 바꿔야함
+  @Post('logout') //나중에 Post로 바꿔야함.
   async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token');
     res.redirect('/');
