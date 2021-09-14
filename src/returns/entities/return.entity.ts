@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
 } from 'typeorm';
 
 import { User } from '../../users/entities/user.entity';
@@ -24,7 +25,7 @@ export class Returning {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Lending, (lending) => lending.returnings)
+  @OneToOne(() => Lending, (lending) => lending.returning)
   lending: Lending;
 
   @ManyToOne(() => User, (user) => user.returnings)

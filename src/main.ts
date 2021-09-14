@@ -5,10 +5,12 @@ import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
   const config = app.get<ConfigService>(ConfigService);
   const port = config.get('PORT');
+
+  app.setGlobalPrefix('api');
   app.use(cookieParser());
+  app.enableCors();
   await app.listen(port);
 }
 bootstrap();
