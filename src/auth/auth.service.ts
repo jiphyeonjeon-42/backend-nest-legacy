@@ -13,8 +13,8 @@ export interface tokenTypes {
 }
 
 export interface ftTypes {
-  id: number;
-  intraid: string;
+  intra: number;
+  login: string;
   image: string;
 }
 
@@ -22,10 +22,10 @@ export interface ftTypes {
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  async jwtGen(user: any) {
+  async jwtGen(user: any, id: number) {
     const payload = {
-      username: user.login,
-      id: user.id,
+      login: user.login,
+      id,
       image: user.image_url,
     };
     return this.jwtService.sign(payload);
