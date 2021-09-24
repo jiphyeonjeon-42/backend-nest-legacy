@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, getConnection, getRepository, Repository } from 'typeorm';
+import {
+  Connection,
+  getConnection,
+  getRepository,
+  QueryBuilder,
+  Repository,
+} from 'typeorm';
 import { CreateReturnDto } from './dto/create-return.dto';
-import { UpdateReturnDto } from './dto/update-return.dto';
 import { Returning } from './entities/return.entity';
 
 @Injectable()
@@ -12,8 +17,18 @@ export class ReturnsService {
     private readonly returnsRepository: Repository<Returning>,
   ) {}
 
-  async create(bookId: number) {
-    return 'This action adds a new return';
+  async create(dto: CreateReturnDto) {
+    const data = await this.returnsRepository
+      .createQueryBuilder('returning')
+      .insert()
+      .into(Returning)
+      .values({
+        condition: dto.condition,
+        lending: { id: dto.lendingId },
+        user: { id: dto.userId },
+        librarian: { id: dto.librarianId },
+      })
+      .execute();
   }
 
   async findAll() {
@@ -22,10 +37,6 @@ export class ReturnsService {
 
   async findOne(lendingId: number) {
     return `This action returns one returns`;
-  }
-
-  async update(id: number, updateReturnDto: UpdateReturnDto) {
-    return `This action updates a #${id} return`;
   }
 
   async remove(id: number) {
