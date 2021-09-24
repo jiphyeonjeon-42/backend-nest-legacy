@@ -14,7 +14,9 @@ export class Reservation {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   endAt: Date;
 
   @CreateDateColumn()

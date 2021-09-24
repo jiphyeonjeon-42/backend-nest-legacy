@@ -14,7 +14,7 @@ export class UsersService {
   async findOne(id: string): Promise<User> {
     let user: User = null;
     try {
-      user = await this.userRepository.findOne({ where: { intra: id } });
+      user = await this.userRepository.findOne({ where: { id } });
     } catch (e) {
       throw e;
     }
@@ -26,16 +26,15 @@ export class UsersService {
   }
 
   async userSave(user: ftTypes): Promise<User | undefined> {
-    const createdUser = new User(user.intraid, user.id);
+    const createdUser = new User(user.login, user.intra);
     return this.userRepository.save(createdUser);
   }
 
-  async userSearch(user: ftTypes): Promise<string> {
+  async userSearch(user: ftTypes): Promise<User> {
     const existingUser = await this.userRepository.findOne({
-      where: { intra: user.id },
+      where: { intra: user.intra },
     });
-    if (!existingUser) return 'save';
-    return 'find';
+    return existingUser;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -46,26 +45,4 @@ export class UsersService {
   findAll() {
     return `This action returns all users`;
   }
-
-  // userSave(user: ftTypes) {
-  //   console.log('Hello!!');
-  //   return user;
-  //}
-
-  // async findOne(username: string): Promise<User | undefined> {
-  //   return this.users.find((user) => user.username === username);
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} user`;
-  // }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
 }
