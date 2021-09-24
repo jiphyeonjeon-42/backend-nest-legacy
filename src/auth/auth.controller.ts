@@ -21,13 +21,17 @@ export class AuthController {
   @UseGuards(FtAuthGuard)
   @Get('token')
   async getToken(@Req() req, @Res({ passthrough: true }) res: Response) {
-    const jwtToken = await this.authService.jwtGen(req.user);
-    const { id, login, image_url } = req.user;
+    const { intra, login, image_url } = req.user;
     const ftUserInfo: ftTypes = {
-      id: id,
-      intraid: login,
+      intra,
+      login,
       image: image_url,
     };
+    let user = await this.userService.userSearch(ftUserInfo);
+    if (!user) {
+      user = await this.userService.userSave(ftUserInfo);
+    }
+    const jwtToken = await this.authService.jwtGen(req.user, user.id);
 
     res.cookie('access_token', jwtToken, {
       httpOnly: true,
@@ -35,12 +39,6 @@ export class AuthController {
     });
     res.status(302).redirect('.');
     //res.status(302).redirect('http://localhost:80/auth');
-    if ((await this.userService.userSearch(ftUserInfo)) === 'find') {
-      console.log('DB에 이미 있는 사람입니다.');
-    } else {
-      console.log('DB에 없는 사람입니다.');
-      await this.userService.userSave(ftUserInfo);
-    }
     return;
   }
 

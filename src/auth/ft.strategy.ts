@@ -21,7 +21,7 @@ export class FtStrategy extends PassportStrategy(Strategy, 'ftSeoul') {
     try {
       const { id, login, image_url } = profile._json;
       const user = {
-        id: id,
+        intra: id,
         login: login,
         image_url: image_url,
         accessToken,

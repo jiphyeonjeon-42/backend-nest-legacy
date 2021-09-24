@@ -6,7 +6,6 @@ export class FtAuthGuard extends AuthGuard('ftSeoul') {
   handleRequest(err, user, info, context: ExecutionContext) {
     if (err || !user) {
       const res = context.switchToHttp().getResponse();
-      console.log(res);
       return res.redirect('/');
     }
     return user;
