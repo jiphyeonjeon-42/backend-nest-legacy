@@ -26,7 +26,7 @@ export class UsersService {
   }
 
   async userSave(user: ftTypes): Promise<User | undefined> {
-    const createdUser = new User(user.login, user.intra);
+    const createdUser = new User({ login: user.login, intra: user.intra });
     return this.userRepository.save(createdUser);
   }
 
