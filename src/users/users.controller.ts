@@ -2,13 +2,15 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  // Patch,
-  // Param,
-  // Delete,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  SerializeOptions,
+  ParseArrayPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-//import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -24,18 +26,14 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.usersService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.usersService.update(+id, updateUserDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.usersService.remove(+id);
-  // }
+  @SerializeOptions({ groups: ['search'] })
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get('/search')
+  search(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit = 5,
+    @Query('query') query: string = '',
+  ) {
+    return this.usersService.searchByLogin(query, { page, limit });
+  }
 }

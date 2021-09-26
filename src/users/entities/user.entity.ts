@@ -10,6 +10,7 @@ import {
 import { Returning } from '../../returns/entities/return.entity';
 import { Lending } from '../../lendings/entities/lending.entity';
 import { Reservation } from 'src/reservations/entities/reservation.entity';
+import { Exclude, Expose } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -25,27 +26,34 @@ export class User {
   login: string;
 
   @Column()
+  @Exclude()
   intra: number;
 
   @Column({ default: '0' })
+  @Exclude()
   slack: string;
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @Exclude()
   penaltiyAt: Date;
 
   @Column({ default: 0 })
   lendingCnt: number;
 
   @Column({ default: 0 })
+  @Exclude()
   reservationCnt: number;
 
   @Column({ default: false })
+  @Exclude()
   librarian: boolean;
 
   @CreateDateColumn()
+  @Exclude()
   createdAt: Date;
 
   @UpdateDateColumn()
+  @Exclude()
   updatedAt: Date;
 
   @OneToMany(() => Returning, (returning) => returning.user)
@@ -62,4 +70,9 @@ export class User {
 
   @OneToMany(() => Reservation, (reservation) => reservation.user)
   reservations: Reservation[];
+
+  @Expose({ groups: ['search'] })
+  get isPenalty() {
+    return new Date() <= this.penaltiyAt;
+  }
 }
