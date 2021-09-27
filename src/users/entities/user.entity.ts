@@ -13,9 +13,8 @@ import { Reservation } from 'src/reservations/entities/reservation.entity';
 
 @Entity()
 export class User {
-  constructor(login: string, intra: number) {
-    this.login = login;
-    this.intra = intra;
+  constructor(user: Partial<User>) {
+    Object.assign(this, user);
   }
 
   @PrimaryGeneratedColumn()

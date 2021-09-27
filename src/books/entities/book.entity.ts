@@ -15,6 +15,9 @@ import { Exclude, Expose } from 'class-transformer';
 
 @Entity()
 export class Book {
+  constructor(book: Partial<Book>) {
+    Object.assign(this, book);
+  }
   @PrimaryGeneratedColumn()
   id: number;
 
