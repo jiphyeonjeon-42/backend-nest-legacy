@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UpdateBookDto } from './dto/update-book.dto';
 import { BookInfo } from './entities/bookInfo.entity';
 import { Book } from './entities/book.entity';
 import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
@@ -48,6 +47,17 @@ export class BooksService {
     );
   }
 
+  async searchBook(query: string, options: IPaginationOptions) {
+    const queryBuilder = await this.booksRepository
+      .createQueryBuilder('book')
+      .leftJoinAndSelect('book.info', 'info')
+      .where('book.callSign like :query', { query: `%${query}%` })
+      .orWhere('info.title like :query', { query: `%${query}%` })
+      .orWhere('info.author like :query', { query: `%${query}%` })
+      .orWhere('info.isbn like :query', { query: `%${query}%` });
+    return paginate(queryBuilder, options);
+  }
+
   async findAll() {
     const connection = getConnection();
     return connection.manager.find(BookInfo);
@@ -81,7 +91,7 @@ export class BooksService {
     return paginate(queryBuilder, options);
   }
 
-  async update(id: number, updateBookDto: UpdateBookDto) {
+  async update(id: number) {
     return `This action updates a #${id} book`;
   }
 
