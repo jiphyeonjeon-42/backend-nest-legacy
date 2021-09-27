@@ -21,10 +21,6 @@ export class UsersService {
     return user;
   }
 
-  async queryBuilder(alias: string) {
-    return this.userRepository.createQueryBuilder(alias);
-  }
-
   async userSave(user: ftTypes): Promise<User | undefined> {
     const createdUser = new User(user.login, user.intra);
     return this.userRepository.save(createdUser);

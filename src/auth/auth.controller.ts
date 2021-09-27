@@ -53,7 +53,6 @@ export class AuthController {
       librarian: findUser.librarian,
       imageUrl: image,
     };
-    console.log(ftUserInfo);
     return ftUserInfo;
   }
 

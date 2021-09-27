@@ -33,10 +33,10 @@ export class User {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   penaltiyAt: Date;
 
-  @Column({ default: 2 })
+  @Column({ default: 0 })
   lendingCnt: number;
 
-  @Column({ default: 2 })
+  @Column({ default: 0 })
   reservationCnt: number;
 
   @Column({ default: false })

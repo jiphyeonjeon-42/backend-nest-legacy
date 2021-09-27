@@ -57,7 +57,7 @@ export class BooksService {
     const connection = getConnection();
     const bookInfoRepository = connection.getRepository(BookInfo);
 
-    let bookData = await bookInfoRepository.findOne({
+    const bookData = await bookInfoRepository.findOne({
       where: { id: bookInfoId },
       relations: ['books', 'books.lendings', 'books.lendings.returning'],
     });
