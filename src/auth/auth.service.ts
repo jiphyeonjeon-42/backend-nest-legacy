@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../users/entities/user.entity';
-import axios, { AxiosResponse } from 'axios';
 
 export interface tokenTypes {
   access_token: string;

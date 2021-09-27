@@ -25,6 +25,11 @@ export class Reservation {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Column({
+    nullable: true,
+  })
+  canceledAt: Date;
+
   @ManyToOne(() => User, (user) => user.reservations)
   user: User;
 
