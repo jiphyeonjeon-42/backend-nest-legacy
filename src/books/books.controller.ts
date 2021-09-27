@@ -38,9 +38,9 @@ export class BooksController {
 
   @Get('/search')
   async search(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
-    @Query('query') query: string = '',
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Query('query') query = '',
     @Query('sort') sort?: string,
     @Query('category') category?: string,
   ) {
@@ -56,8 +56,8 @@ export class BooksController {
 
   @Get('info/')
   async findInfo(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
     @Query('sort') sort = 'new',
   ) {
     try {
