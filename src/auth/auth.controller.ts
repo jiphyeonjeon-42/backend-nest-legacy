@@ -4,13 +4,20 @@ import { UsersService } from 'src/users/users.service';
 import { Response } from 'express';
 import { FtAuthGuard } from './ft-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UsersService,
+    private readonly configService: ConfigService,
   ) {}
+
+  @Get('oauth')
+  async oauth(@Res({ passthrough: true }) res: Response) {
+    res.status(302).redirect(this.configService.get('auth.url'));
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -37,8 +44,7 @@ export class AuthController {
       httpOnly: true,
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     });
-    res.status(302).redirect('.');
-    //res.status(302).redirect('http://localhost:80/auth');
+    res.status(302).redirect(this.configService.get('auth.callbackUrl'));
     return;
   }
 

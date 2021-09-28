@@ -18,4 +18,8 @@ export default () => ({
   jwt: {
     secret: process.env.JWT_SECRET,
   },
+  auth: {
+    url: process.env.AUTH_URL,
+    callbackUrl: process.env.CALLBACK_URL,
+  },
 });
