@@ -1,0 +1,12 @@
+entity: Book
+items:
+  book1_1:  
+    info: '@book_info1'
+    donator: 'doby'
+    callSign: '($current)ABC'
+    status: 1
+  book2_1:  
+    info: '@book_info1'
+    donator: 'doby'
+    callSign: '($current)ABC'
+    status: 1

@@ -1,0 +1,14 @@
+entity: Lending
+items:
+  lending1:
+    user: '@user1'
+    librarian: '@librarian{1..3}'
+    book: '@book1_1'
+    condition: '문제 없음'
+  lending2:
+    user: '@user2'
+    librarian: '@librarian{1..3}'
+    book: '@book2_1'
+    condition: '문제 없음'
+
+    
