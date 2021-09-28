@@ -26,8 +26,7 @@ export class LendingsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Req() req, @Body() createLendingDto: CreateLendingDto) {
-    // const librarianId = req.user.id;
-    const librarianId = 1; //
+    const librarianId = req.user.id;
     return this.lendingsService.create(createLendingDto, librarianId);
   }
   @SerializeOptions({ groups: ['findAll'] })

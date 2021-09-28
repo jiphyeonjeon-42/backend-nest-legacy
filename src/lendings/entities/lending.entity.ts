@@ -49,7 +49,6 @@ export class Lending {
 
   @OneToOne(() => Returning, (returning) => returning.lending)
   @Exclude()
-  @JoinColumn()
   returning: Returning;
 
   @Expose({ name: 'dueDate', groups: ['findAll'] })
