@@ -12,7 +12,7 @@ import {
 import { User } from '../../users/entities/user.entity';
 import { Returning } from '../../returns/entities/return.entity';
 import { Book } from '../../books/entities/book.entity';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Lending {
@@ -21,39 +21,29 @@ export class Lending {
   }
 
   @PrimaryGeneratedColumn()
+  @Exclude()
   id: number;
 
   @Column({ default: '' })
-  @Expose({groups:['findAll']})
+  @Exclude()
   condition: string;
 
   @CreateDateColumn()
-  @Expose({groups:['findAll']})
   createdAt: Date;
 
   @UpdateDateColumn()
   @Exclude()
   updatedAt: Date;
 
-  @Expose({groups:['findAll']})
   @ManyToOne(() => User, (user) => user.lendings)
   user: User;
 
   @ManyToOne(() => User, (librarian) => librarian.librarianLendings)
-  @Exclude()
   librarian: User;
 
-  @Expose({groups:['findAll']})
   @ManyToOne(() => Book, (book) => book.lendings)
   book: Book;
 
   @OneToOne(() => Returning, (returning) => returning.lending)
-  @Exclude
   returning: Returning;
-
-  @Expose({ name: 'dueDate', groups: ['findAll'] })
-  getDate() {
-    const date = new Date(this.createdAt);
-    return date.getFullYear() + '.' + date.getMonth() + '.' + date.getDate() + '.';
-  }
 }
