@@ -31,7 +31,7 @@ export class BooksController {
     return this.booksService.create();
   }
 
-  @Get('/search')
+  @Get('/info/search')
   async search(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
@@ -44,7 +44,7 @@ export class BooksController {
 
   @SerializeOptions({ groups: ['search'] })
   @UseInterceptors(ClassSerializerInterceptor)
-  @Get('/searchs')
+  @Get('/search')
   async searchBook(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit = 5,
