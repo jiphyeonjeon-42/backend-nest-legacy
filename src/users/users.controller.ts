@@ -32,7 +32,7 @@ export class UsersController {
   search(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit = 5,
-    @Query('query') query: string = '',
+    @Query('query') query = '',
   ) {
     return this.usersService.searchByLogin(query, { page, limit });
   }

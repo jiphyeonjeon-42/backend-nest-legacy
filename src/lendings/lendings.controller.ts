@@ -7,26 +7,40 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
+  Req,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  SerializeOptions,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { LendingsService } from './lendings.service';
 import { UpdateLendingDto } from './dto/update-lending.dto';
+import { Lending } from './entities/lending.entity';
+import { CreateLendingDto } from './dto/create-lending.dto';
 
 @Controller('lendings')
 export class LendingsController {
   constructor(private readonly lendingsService: LendingsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Query('bookId') bookId: string, @Query('userId') userId: string) {
-    return this.lendingsService.create(+bookId, +userId);
+  async create(@Req() req, @Body() createLendingDto: CreateLendingDto) {
+    // const librarianId = req.user.id;
+    const librarianId = 1; //
+    return this.lendingsService.create(createLendingDto, librarianId);
   }
-
+  @SerializeOptions({ groups: ['findAll'] })
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
+  async findAll() {
     return this.lendingsService.findAll();
   }
 
+  @SerializeOptions({ groups: ['find'] })
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.lendingsService.findOne(+id);
   }
 
