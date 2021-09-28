@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
+  JoinColumn,
 } from 'typeorm';
 
 import { User } from '../../users/entities/user.entity';
@@ -13,6 +14,10 @@ import { Lending } from '../../lendings/entities/lending.entity';
 
 @Entity()
 export class Returning {
+  constructor(returning: Partial<Returning>) {
+    Object.assign(this, returning);
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -26,6 +31,7 @@ export class Returning {
   updatedAt: Date;
 
   @OneToOne(() => Lending, (lending) => lending.returning)
+  @JoinColumn()
   lending: Lending;
 
   @ManyToOne(() => User, (user) => user.returnings)

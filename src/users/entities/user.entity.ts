@@ -14,9 +14,8 @@ import { Exclude, Expose } from 'class-transformer';
 
 @Entity()
 export class User {
-  constructor(login: string, intra: number) {
-    this.login = login;
-    this.intra = intra;
+  constructor(user: Partial<User>) {
+    Object.assign(this, user);
   }
 
   @PrimaryGeneratedColumn()
@@ -72,4 +71,9 @@ export class User {
 
   @OneToMany(() => Reservation, (reservation) => reservation.user)
   reservations: Reservation[];
+
+  @Expose({ groups: ['search'] })
+  get isPenalty() {
+    return new Date() <= this.penaltiyAt;
+  }
 }

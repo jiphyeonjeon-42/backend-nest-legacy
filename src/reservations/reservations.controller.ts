@@ -52,8 +52,6 @@ export class ReservationsController {
         '집현전의 도서는 2권까지 예약할 수 있습니다.',
       );
     }
-    // user reservationCnt increase
-    await this.reservationsService.update(id);
     //create reservation
     await this.reservationsService.create(dto);
     const count = await this.reservationsService.findOne(dto.bookId);

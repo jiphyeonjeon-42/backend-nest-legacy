@@ -3,6 +3,7 @@ import { ftTypes } from 'src/auth/auth.service';
 import { UserRepository } from './user.repository';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +23,7 @@ export class UsersService {
   }
 
   async userSave(user: ftTypes): Promise<User | undefined> {
-    const createdUser = new User(user.login, user.intra);
+    const createdUser = new User({ login: user.login, intra: user.intra });
     return this.userRepository.save(createdUser);
   }
 
@@ -40,5 +41,12 @@ export class UsersService {
 
   findAll() {
     return `This action returns all users`;
+  }
+
+  async searchByLogin(login: string, options: IPaginationOptions) {
+    const queryBuilder = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.login like :login', { login: `%${login}%` });
+    return paginate(queryBuilder, options);
   }
 }

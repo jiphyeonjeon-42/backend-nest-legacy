@@ -16,6 +16,10 @@ import { Exclude, Expose } from 'class-transformer';
 
 @Entity()
 export class Lending {
+  constructor(lending: Partial<Lending>) {
+    Object.assign(this, lending);
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -44,8 +48,7 @@ export class Lending {
   book: Book;
 
   @OneToOne(() => Returning, (returning) => returning.lending)
-  @Exclude()
-  @JoinColumn()
+  @Exclude
   returning: Returning;
 
   @Expose({ name: 'dueDate', groups: ['findAll'] })
