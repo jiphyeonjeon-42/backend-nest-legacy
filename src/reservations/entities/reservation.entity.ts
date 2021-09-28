@@ -11,6 +11,9 @@ import { User } from 'src/users/entities/user.entity';
 import { Book } from 'src/books/entities/book.entity';
 @Entity()
 export class Reservation {
+  constructor(reservation: Partial<Reservation>) {
+    Object.assign(this, reservation);
+  }
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,6 +27,11 @@ export class Reservation {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({
+    nullable: true,
+  })
+  canceledAt: Date;
 
   @ManyToOne(() => User, (user) => user.reservations)
   user: User;
