@@ -16,6 +16,10 @@ import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Lending {
+  constructor(lending: Partial<Lending>) {
+    Object.assign(this, lending);
+  }
+
   @PrimaryGeneratedColumn()
   @Exclude()
   id: number;
@@ -41,6 +45,5 @@ export class Lending {
   book: Book;
 
   @OneToOne(() => Returning, (returning) => returning.lending)
-  @JoinColumn()
   returning: Returning;
 }

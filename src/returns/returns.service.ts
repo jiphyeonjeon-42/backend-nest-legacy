@@ -1,8 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, getConnection, getRepository, Repository } from 'typeorm';
+import { Lending } from 'src/lendings/entities/lending.entity';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Connection,
+  getConnection,
+  getRepository,
+  QueryBuilder,
+  Repository,
+} from 'typeorm';
 import { CreateReturnDto } from './dto/create-return.dto';
-import { UpdateReturnDto } from './dto/update-return.dto';
 import { Returning } from './entities/return.entity';
 
 @Injectable()
@@ -10,10 +17,26 @@ export class ReturnsService {
   constructor(
     @InjectRepository(Returning)
     private readonly returnsRepository: Repository<Returning>,
+    private connection: Connection,
   ) {}
 
-  async create(bookId: number) {
-    return 'This action adds a new return';
+  async create(dto: CreateReturnDto) {
+    const returning = new Returning({
+      condition: dto.condition,
+      lending: new Lending({ id: dto.lendingId }),
+      user: new User({ id: dto.userId }),
+      librarian: new User({ id: dto.librarianId }),
+    });
+    try {
+      await getConnection().transaction(async (manager) => {
+        await manager.save(returning);
+        await manager.update(User, dto.userId, {
+          lendingCnt: () => 'lendingCnt - 1',
+        });
+      });
+    } catch (err) {
+      throw new BadRequestException(err.sqlMessage);
+    }
   }
 
   async findAll() {
@@ -22,10 +45,6 @@ export class ReturnsService {
 
   async findOne(lendingId: number) {
     return `This action returns one returns`;
-  }
-
-  async update(id: number, updateReturnDto: UpdateReturnDto) {
-    return `This action updates a #${id} return`;
   }
 
   async remove(id: number) {
