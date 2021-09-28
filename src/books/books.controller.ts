@@ -2,8 +2,6 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
   Param,
   Delete,
   ParseIntPipe,
@@ -15,8 +13,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { UpdateBookDto } from './dto/update-book.dto';
-import { SearchService } from 'src/search/search.service';
 import { Reservation } from 'src/reservations/entities/reservation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReservationRepository } from 'src/reservations/reservations.repository';
@@ -26,7 +22,6 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class BooksController {
   constructor(
     private readonly booksService: BooksService,
-    private readonly searchService: SearchService,
     @InjectRepository(Reservation)
     private readonly reservationRepository: ReservationRepository,
   ) {}
@@ -36,7 +31,7 @@ export class BooksController {
     return this.booksService.create();
   }
 
-  @Get('/search')
+  @Get('/info/search')
   async search(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
@@ -45,6 +40,17 @@ export class BooksController {
     @Query('category') category?: string,
   ) {
     return this.booksService.search(query, page, limit, sort, category);
+  }
+
+  @SerializeOptions({ groups: ['search'] })
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get('/search')
+  async searchBook(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit = 5,
+    @Query('query') query = '',
+  ) {
+    return this.booksService.searchBook(query, { page, limit });
   }
 
   @SerializeOptions({ groups: ['detail'] })
@@ -65,11 +71,6 @@ export class BooksController {
     } catch (error) {
       return error;
     }
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-    return this.booksService.update(+id, updateBookDto);
   }
 
   @UseGuards(JwtAuthGuard)
