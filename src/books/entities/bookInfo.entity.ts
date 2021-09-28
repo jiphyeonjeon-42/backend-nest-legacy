@@ -27,20 +27,25 @@ export class BookInfo {
   id: number;
 
   @Column()
+  @Expose({ groups: ['findAll'] })
   title: string;
 
   @Column()
+  @Exclude()
   author: string;
 
   @Column()
+  @Exclude()
   publisher: string;
 
   @Column({
     nullable: true,
   })
+  @Exclude()
   isbn: string;
 
   @Column()
+  @Exclude()
   image: string;
 
   @Column({
@@ -48,12 +53,14 @@ export class BookInfo {
     enum: BookCategory,
     default: BookCategory.WEB_PROGRAMMING,
   })
+  @Exclude()
   category: BookCategory;
 
   @Column({
     type: 'date',
     nullable: true,
   })
+  @Exclude()
   publishedAt: Date;
 
   @Exclude()
@@ -80,6 +87,7 @@ export class BookInfo {
   @Expose({ name: 'publishedAt', groups: ['detail'] })
   getDate() {
     const date = new Date(this.publishedAt);
+    console.log(date);
     return date.getFullYear() + '년 ' + date.getMonth() + '월';
   }
 }
