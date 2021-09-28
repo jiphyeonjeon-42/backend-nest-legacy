@@ -1,0 +1,8 @@
+entity: Returning
+items:
+  returning1:
+    lending: '@lending1'
+    user: '@user1'
+    librarian: '@librarian*'
+    condition: '문제 없음'
+

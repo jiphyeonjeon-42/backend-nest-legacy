@@ -1,0 +1,45 @@
+entity: User
+items:
+  librarian1:
+    login: hyekim
+    intra: 1
+    slack: hyekim
+    lendingCnt: 0
+    reservationCnt: 0
+    librarian: true
+  librarian2:
+    login: chanykim
+    intra: 2
+    slack: chanykim
+    lendingCnt: 0
+    reservationCnt: 0
+    librarian: true
+  librarian3:
+    login: minkykim
+    intra: 3
+    slack: minkykim
+    lendingCnt: 0
+    reservationCnt: 0
+    librarian: true
+  user1:
+    login: jwoo
+    intra: 4
+    slack: jwoo
+    lendingCnt: 0
+    reservationCnt: 0
+    librarian: false
+  user2:
+    login: sujikim
+    intra: 5
+    slack: sujikim
+    lendingCnt: 0
+    reservationCnt: 0
+    librarian: false
+  user3:
+    login: tkim
+    intra: 6
+    slack: tkim
+    lendingCnt: 0
+    reservationCnt: 0
+    librarian: false
+
