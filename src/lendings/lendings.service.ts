@@ -47,7 +47,7 @@ export class LendingsService {
       !(await checkLendingCnt(dto.userId)) ||
       !(await checkLibrarian(librarianId))
     )
-      throw new BadRequestException(dto.userId || librarianId);
+      throw new BadRequestException('dto.userId || librarianId Error');
     try {
       await this.connection.transaction(async (manager) => {
         await manager.insert(Lending, {
@@ -70,6 +70,8 @@ export class LendingsService {
     options: IPaginationOptions,
     sort: string,
   ): Promise<Pagination<Lending>> {
+    if (!(sort == 'new' || sort == 'older'))
+      throw new BadRequestException('sort string Error');
     let standard = false;
     if (sort != 'new') standard = true;
     let lendingData = this.lendingsRepository
