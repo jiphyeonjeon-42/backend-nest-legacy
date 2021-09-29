@@ -27,7 +27,7 @@ export class BookInfo {
   id: number;
 
   @Column()
-  @Expose({ groups: ['findAll'] })
+  @Expose({ groups: ['findAll', 'find'] })
   title: string;
 
   @Column()
@@ -45,7 +45,7 @@ export class BookInfo {
   isbn: string;
 
   @Column()
-  @Exclude()
+  @Expose({ groups: ['find'] })
   image: string;
 
   @Column({
@@ -87,7 +87,6 @@ export class BookInfo {
   @Expose({ name: 'publishedAt', groups: ['detail'] })
   getDate() {
     const date = new Date(this.publishedAt);
-    console.log(date);
-    return date.getFullYear() + '년 ' + date.getMonth() + '월';
+    return date.getFullYear() + '년 ' + (date.getMonth() + 1) + '월';
   }
 }

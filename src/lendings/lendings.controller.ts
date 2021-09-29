@@ -12,12 +12,15 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   SerializeOptions,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { LendingsService } from './lendings.service';
 import { UpdateLendingDto } from './dto/update-lending.dto';
 import { Lending } from './entities/lending.entity';
 import { CreateLendingDto } from './dto/create-lending.dto';
+import { Pagination } from 'nestjs-typeorm-paginate';
 
 @Controller('lendings')
 export class LendingsController {
@@ -32,8 +35,12 @@ export class LendingsController {
   @SerializeOptions({ groups: ['findAll'] })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll() {
-    return this.lendingsService.findAll();
+  async findAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit = 5,
+    @Query('sort') sort = 'new',
+  ): Promise<Pagination<Lending>> {
+    return this.lendingsService.findAll({ page, limit }, sort);
   }
 
   @SerializeOptions({ groups: ['find'] })

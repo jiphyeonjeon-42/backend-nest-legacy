@@ -10,6 +10,11 @@ import { Lending } from './entities/lending.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { CreateLendingDto } from './dto/create-lending.dto';
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
 
 async function checkLendingCnt(userId: number) {
   const userData = await getConnection().getRepository('User').findOne(userId);
@@ -61,12 +66,25 @@ export class LendingsService {
     return 'This action adds a new lending';
   }
 
-  async findAll() {
-    return await this.lendingsRepository.find({
-      relations: ['user', 'librarian', 'book', 'returning', 'book.info'],
-      where: { returning: null },
-    });
+  async findAll(
+    options: IPaginationOptions,
+    sort: string,
+  ): Promise<Pagination<Lending>> {
+    let standard = false;
+    if (sort != 'new') standard = true;
+    let lendingData = this.lendingsRepository
+      .createQueryBuilder('lending')
+      .leftJoinAndSelect('lending.user', 'user')
+      .leftJoinAndSelect('lending.librarian', 'librarian')
+      .leftJoinAndSelect('lending.book', 'book')
+      .leftJoinAndSelect('book.info', 'info')
+      .leftJoinAndSelect('lending.returning', 'returning')
+      .where('returning.id is null');
+    if (standard) lendingData = lendingData.orderBy('lending.createdAt', 'ASC');
+    else lendingData = lendingData.orderBy('lending.createdAt', 'DESC');
+    return paginate<Lending>(lendingData, options);
   }
+
   async findOne(lendingId: number) {
     const lendingData = await this.lendingsRepository.findOne({
       relations: ['user', 'librarian', 'book', 'returning', 'book.info'],
