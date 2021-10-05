@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 import { Book } from './book.entity';
-import { Exclude, Expose } from 'class-transformer';
+import { Expose } from 'class-transformer';
 
 export enum BookCategory {
   LANGUAGE = '프로그래밍 언어',
@@ -27,25 +27,33 @@ export class BookInfo {
   id: number;
 
   @Column()
-  @Expose({ groups: ['findAll'] })
+  @Expose({
+    groups: [
+      'books.findOne',
+      'books.findInfo',
+      'books.searchBook',
+      'lendings.findAll',
+      'lendings.findOne',
+    ],
+  })
   title: string;
 
   @Column()
-  @Exclude()
+  @Expose({ groups: ['books.findOne', 'books.findInfo', 'books.searchBook'] })
   author: string;
 
   @Column()
-  @Exclude()
+  @Expose({ groups: ['books.findOne', 'books.findInfo', 'books.searchBook'] })
   publisher: string;
 
   @Column({
     nullable: true,
   })
-  @Exclude()
+  @Expose({ groups: ['books.findOne', 'books.findInfo'] })
   isbn: string;
 
   @Column()
-  @Exclude()
+  @Expose({ groups: ['books.findOne', 'books.findInfo', 'lendings.findOne'] })
   image: string;
 
   @Column({
@@ -53,28 +61,29 @@ export class BookInfo {
     enum: BookCategory,
     default: BookCategory.WEB_PROGRAMMING,
   })
-  @Exclude()
+  @Expose({ groups: ['books.findOne', 'books.findInfo', 'books.searchBook'] })
   category: BookCategory;
 
   @Column({
     type: 'date',
     nullable: true,
   })
-  @Exclude()
+  @Expose({ groups: [] })
   publishedAt: Date;
 
-  @Exclude()
+  @Expose({ groups: [] })
   @CreateDateColumn()
   createdAt: Date;
 
-  @Exclude()
+  @Expose({ groups: [] })
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Expose({ groups: ['books.findOne'] })
   @OneToMany(() => Book, (book) => book.info)
   books: Book[];
 
-  @Expose({ name: 'donators', groups: ['detail'] })
+  @Expose({ name: 'donators', groups: ['books.findOne'] })
   getDonators() {
     const donators = new Set();
     for (const book of this.books) {
@@ -84,10 +93,9 @@ export class BookInfo {
     return [...donators].join(', ');
   }
 
-  @Expose({ name: 'publishedAt', groups: ['detail'] })
+  @Expose({ name: 'publishedAt', groups: ['books.findOne', 'books.findInfo'] })
   getDate() {
     const date = new Date(this.publishedAt);
-    console.log(date);
-    return date.getFullYear() + '년 ' + date.getMonth() + '월';
+    return date.getFullYear() + '년 ' + (date.getMonth() + 1) + '월';
   }
 }

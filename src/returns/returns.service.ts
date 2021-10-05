@@ -1,6 +1,8 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Lending } from 'src/lendings/entities/lending.entity';
+import { ReservationsService } from 'src/reservations/reservations.service';
 import { User } from 'src/users/entities/user.entity';
 import {
   Connection,
@@ -18,6 +20,7 @@ export class ReturnsService {
     @InjectRepository(Returning)
     private readonly returnsRepository: Repository<Returning>,
     private connection: Connection,
+    private schedulerRegistry: SchedulerRegistry,
   ) {}
 
   async create(dto: CreateReturnDto) {
@@ -30,13 +33,11 @@ export class ReturnsService {
     try {
       await getConnection().transaction(async (manager) => {
         await manager.save(returning);
-        await manager.update(User, dto.userId, {
-          lendingCnt: () => 'lendingCnt - 1',
-        });
       });
     } catch (err) {
       throw new BadRequestException(err.sqlMessage);
     }
+    console.log(ReservationsService.isReservation());
   }
 
   async findAll() {

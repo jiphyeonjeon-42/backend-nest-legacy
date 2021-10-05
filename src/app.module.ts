@@ -20,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
 import { SearchModule } from './search/search.module';
 import { SeedModule } from './seed/seed.module';
 import { SlackbotModule } from './slackbot/slackbot.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { SlackbotModule } from './slackbot/slackbot.module';
     SearchModule,
     SeedModule,
     SlackbotModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
