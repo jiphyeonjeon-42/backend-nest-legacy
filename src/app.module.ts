@@ -19,6 +19,7 @@ import { Reservation } from './reservations/entities/reservation.entity';
 import { AuthModule } from './auth/auth.module';
 import { SearchModule } from './search/search.module';
 import { SeedModule } from './seed/seed.module';
+import { SlackbotModule } from './slackbot/slackbot.module';
 import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
@@ -49,6 +50,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     SearchModule,
     SeedModule,
+    SlackbotModule,
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController],

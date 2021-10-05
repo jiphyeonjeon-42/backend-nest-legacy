@@ -44,8 +44,7 @@ export class AuthController {
       httpOnly: true,
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     });
-    res.status(302).redirect(this.configService.get('auth.callbackUrl'));
-    return;
+    return res.status(302).redirect(this.configService.get('auth.callbackUrl'));
   }
 
   @UseGuards(JwtAuthGuard)

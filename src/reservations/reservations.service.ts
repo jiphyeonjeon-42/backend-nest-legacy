@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 import { Book } from 'src/books/entities/book.entity';
 import { User } from 'src/users/entities/user.entity';
-import { UserRepository } from 'src/users/user.repository';
 import { getConnection } from 'typeorm';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { Reservation } from './entities/reservation.entity';
@@ -18,9 +17,6 @@ export class ReservationsService {
   constructor(
     @InjectRepository(Reservation)
     private readonly reservationRepository: ReservationRepository, // 1. DB와의 연결을 정의
-    @InjectRepository(User)
-    private readonly userRepository: UserRepository,
-    private schedulerRegistry: SchedulerRegistry,
   ) {}
 
   async create(dto: CreateReservationDto) {
@@ -31,25 +27,33 @@ export class ReservationsService {
     try {
       await getConnection().transaction(async (manager) => {
         await manager.save(reservation);
-        await manager.update(User, dto.userId, {
-          reservationCnt: () => 'reservationCnt + 1',
-        });
       });
     } catch (err) {
       throw new BadRequestException(err.sqlMessage);
     }
   }
 
-  async findOne(bookId: number) {
-    const [list, count] = await this.reservationRepository.findAndCount({
-      where: {
-        book: { id: bookId },
-      },
-    });
+  async findOneCnt(itemId: number, item: string) {
+    const count = 0;
+    if (item === 'book') {
+      const [list, count] = await this.reservationRepository.findAndCount({
+        where: {
+          book: { id: itemId },
+        },
+      });
+      return count;
+    } else if (item === 'user') {
+      const [list, count] = await this.reservationRepository.findAndCount({
+        where: {
+          user: { id: itemId },
+        },
+      });
+      return count;
+    }
     return count;
   }
 
-  async reservationCheck(dto: CreateReservationDto) {
+  async reservationBookCheck(dto: CreateReservationDto) {
     const check = await this.reservationRepository.findOne({
       where: { user: dto.userId, book: dto.bookId },
     });

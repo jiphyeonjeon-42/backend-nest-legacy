@@ -37,10 +37,6 @@ export class User {
   @Expose({ groups: [] })
   penaltyAt: Date;
 
-  @Column({ default: 0 })
-  @Expose({ groups: [] })
-  reservationCnt: number;
-
   @Column({ default: false })
   @Expose({ groups: [] })
   librarian: boolean;

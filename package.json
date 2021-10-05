@@ -36,6 +36,7 @@
     "@nestjs/schedule": "^1.0.1",
     "@nestjs/typeorm": "^8.0.1",
     "@nestjsplus/redirect": "^1.0.0",
+    "@slack/web-api": "^6.4.0",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "cookie-parser": "^1.4.5",
@@ -53,6 +54,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
+    "slack": "^11.0.2",
     "typeorm": "^0.2.36",
     "typeorm-seeding": "^1.6.1"
   },
@@ -61,6 +63,7 @@
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@types/cookie-parser": "^1.4.2",
+    "@types/cron": "^1.7.3",
     "@types/express": "^4.17.13",
     "@types/faker": "^5.5.8",
     "@types/jest": "^26.0.24",
