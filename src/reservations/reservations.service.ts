@@ -86,7 +86,7 @@ export class ReservationsService {
   }
 
   findAll() {
-    return `This action returns all reservations`;
+    return `This action returnings all reservations`;
   }
 
   remove(id: number) {
