@@ -9,13 +9,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ReturnsService } from './returns.service';
-import { CreateReturnDto } from './dto/create-return.dto';
+import { ReturningsService } from './returnings.service';
+import { CreateReturnDto } from './dto/create-returning.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
-@Controller('returns')
-export class ReturnsController {
-  constructor(private readonly returnsService: ReturnsService) {}
+@Controller('returnings')
+export class ReturningsController {
+  constructor(private readonly returningsService: ReturningsService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -24,21 +24,21 @@ export class ReturnsController {
     @Body(new ValidationPipe()) createReturnDto: CreateReturnDto,
   ) {
     createReturnDto.librarianId = req.user.id;
-    return this.returnsService.create(createReturnDto);
+    return this.returningsService.create(createReturnDto);
   }
 
   @Get()
   async findAll() {
-    return this.returnsService.findAll();
+    return this.returningsService.findAll();
   }
 
   @Get(':lendingId')
   async findOne(@Param('lendingId') lendingId: string) {
-    return this.returnsService.findOne(+lendingId);
+    return this.returningsService.findOne(+lendingId);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.returnsService.remove(+id);
+    return this.returningsService.remove(+id);
   }
 }

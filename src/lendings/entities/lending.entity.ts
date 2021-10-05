@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 import { User } from '../../users/entities/user.entity';
-import { Returning } from '../../returns/entities/return.entity';
+import { Returning } from '../../returnings/entities/returning.entity';
 import { Book } from '../../books/entities/book.entity';
 import { Exclude, Expose } from 'class-transformer';
 

@@ -8,10 +8,10 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { Expose } from 'class-transformer';
 
 import { User } from '../../users/entities/user.entity';
 import { Lending } from '../../lendings/entities/lending.entity';
+import { Expose } from 'class-transformer';
 
 @Entity()
 export class Returning {
@@ -35,8 +35,8 @@ export class Returning {
   updatedAt: Date;
 
   @OneToOne(() => Lending, (lending) => lending.returning)
-  @JoinColumn()
   @Expose({ groups: [] })
+  @JoinColumn()
   lending: Lending;
 
   @ManyToOne(() => User, (user) => user.returnings)

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LendingsModule } from './lendings/lendings.module';
-import { ReturnsModule } from './returns/returns.module';
+import { ReturningsModule } from './returnings/returnings.module';
 import { UsersModule } from './users/users.module';
 import { BooksModule } from './books/books.module';
 import { ReservationsModule } from './reservations/reservations.module';
@@ -11,7 +11,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config/configuration';
 
 import { User } from './users/entities/user.entity';
-import { Returning } from './returns/entities/return.entity';
+import { Returning } from './returnings/entities/returning.entity';
 import { Lending } from './lendings/entities/lending.entity';
 import { Book } from './books/entities/book.entity';
 import { BookInfo } from './books/entities/bookInfo.entity';
@@ -25,7 +25,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 @Module({
   imports: [
     LendingsModule,
-    ReturnsModule,
+    ReturningsModule,
     UsersModule,
     BooksModule,
     ReservationsModule,

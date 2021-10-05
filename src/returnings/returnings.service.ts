@@ -11,14 +11,14 @@ import {
   QueryBuilder,
   Repository,
 } from 'typeorm';
-import { CreateReturnDto } from './dto/create-return.dto';
-import { Returning } from './entities/return.entity';
+import { CreateReturnDto } from './dto/create-returning.dto';
+import { Returning } from './entities/returning.entity';
 
 @Injectable()
-export class ReturnsService {
+export class ReturningsService {
   constructor(
     @InjectRepository(Returning)
-    private readonly returnsRepository: Repository<Returning>,
+    private readonly returningsRepository: Repository<Returning>,
     private connection: Connection,
     private schedulerRegistry: SchedulerRegistry,
   ) {}
@@ -41,11 +41,11 @@ export class ReturnsService {
   }
 
   async findAll() {
-    return `This action returns all returns`;
+    return `This action returnings all returnings`;
   }
 
   async findOne(lendingId: number) {
-    return `This action returns one returns`;
+    return `This action returnings one returnings`;
   }
 
   async remove(id: number) {

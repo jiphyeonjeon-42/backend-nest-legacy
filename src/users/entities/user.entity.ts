@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Returning } from '../../returns/entities/return.entity';
+import { Returning } from '../../returnings/entities/returning.entity';
 import { Lending } from '../../lendings/entities/lending.entity';
 import { Reservation } from 'src/reservations/entities/reservation.entity';
 import { Expose } from 'class-transformer';
