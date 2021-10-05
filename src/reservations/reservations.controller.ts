@@ -44,7 +44,7 @@ export class ReservationsController {
     if (reservationBookCheck) {
       throw new BadRequestException('예약하신 책입니다.');
     }
-    const userCount = await this.reservationsService.findOne(
+    const userCount = await this.reservationsService.findOneCnt(
       dto.userId,
       'user',
     );
@@ -55,7 +55,7 @@ export class ReservationsController {
     }
 
     //create reservation
-    //await this.reservationsService.create(dto);
+    await this.reservationsService.create(dto);
 
     //slack message send.
     const findUser = await this.userService.findOne(dto.userId);
@@ -69,7 +69,7 @@ export class ReservationsController {
       '`' +
       '이 예약되었습니다.';
     this.slackbotService.publishMessage(findUser.slack, message);
-    const bookCount = await this.reservationsService.findOne(
+    const bookCount = await this.reservationsService.findOneCnt(
       dto.bookId,
       'book',
     );

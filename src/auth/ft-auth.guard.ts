@@ -19,7 +19,3 @@ export class FtAuthGuard extends AuthGuard('ftSeoul') {
     return user;
   }
 }
-
-// if (err || !user) {
-//   throw err || new UnauthorizedException();
-// }

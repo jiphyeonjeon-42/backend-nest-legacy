@@ -29,7 +29,7 @@ export class ReservationsService {
     }
   }
 
-  async findOne(itemId: number, item: string) {
+  async findOneCnt(itemId: number, item: string) {
     const count = 0;
     if (item === 'book') {
       const [list, count] = await this.reservationRepository.findAndCount({
