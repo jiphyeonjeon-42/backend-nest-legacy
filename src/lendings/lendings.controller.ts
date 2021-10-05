@@ -32,7 +32,7 @@ export class LendingsController {
     const librarianId = req.user.id;
     return this.lendingsService.create(createLendingDto, librarianId);
   }
-  @SerializeOptions({ groups: ['findAll'] })
+  @SerializeOptions({ groups: ['lendings.findAll'] })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/search')
   async findAll(
@@ -44,7 +44,7 @@ export class LendingsController {
     return this.lendingsService.findAll({ page, limit }, sort, word);
   }
 
-  @SerializeOptions({ groups: ['find'] })
+  @SerializeOptions({ groups: ['lendings.findOne'] })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   async findOne(@Param('id') id: string) {

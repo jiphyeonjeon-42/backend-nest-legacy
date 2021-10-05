@@ -42,7 +42,7 @@ export class BooksController {
     return this.booksService.search(query, page, limit, sort, category);
   }
 
-  @SerializeOptions({ groups: ['search'] })
+  @SerializeOptions({ groups: ['books.searchBook'] })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/search')
   async searchBook(
@@ -53,13 +53,15 @@ export class BooksController {
     return this.booksService.searchBook(query, { page, limit });
   }
 
-  @SerializeOptions({ groups: ['detail'] })
+  @SerializeOptions({ groups: ['books.findOne'] })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('info/:id')
   findOne(@Param('id') id: string) {
     return this.booksService.findOne(+id);
   }
 
+  @SerializeOptions({ groups: ['books.findInfo'] })
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('info/')
   async findInfo(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,

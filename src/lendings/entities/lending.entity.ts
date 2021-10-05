@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToOne,
-  JoinColumn,
 } from 'typeorm';
 
 import { User } from '../../users/entities/user.entity';
@@ -24,34 +23,34 @@ export class Lending {
   id: number;
 
   @Column({ default: '' })
-  @Expose({ groups: ['findAll', 'find'] })
+  @Expose({ groups: ['lendings.findAll', 'lendings.findOne'] })
   condition: string;
 
   @CreateDateColumn()
-  @Expose({ groups: ['find'] })
+  @Expose({ groups: ['lendings.findOne'] })
   createdAt: Date;
 
   @UpdateDateColumn()
-  @Exclude()
+  @Expose({ groups: [] })
   updatedAt: Date;
 
-  @Expose({ groups: ['findAll', 'find'] })
+  @Expose({ groups: ['lendings.findAll', 'lendings.findOne'] })
   @ManyToOne(() => User, (user) => user.lendings)
   user: User;
 
   @ManyToOne(() => User, (librarian) => librarian.librarianLendings)
-  @Expose()
+  @Expose({ groups: [] })
   librarian: User;
 
-  @Expose({ groups: ['findAll', 'find'] })
+  @Expose({ groups: ['lendings.findAll', 'lendings.findOne'] })
   @ManyToOne(() => Book, (book) => book.lendings)
   book: Book;
 
   @OneToOne(() => Returning, (returning) => returning.lending)
-  @Expose()
+  @Expose({ groups: [] })
   returning: Returning;
 
-  @Expose({ name: 'dueDate', groups: ['findAll', 'find'] })
+  @Expose({ name: 'dueDate', groups: ['lendings.findAll', 'lendings.findOne'] })
   getdueDate() {
     if (this.returning) throw new Error('lendings.service.find(All) catch');
     const tDate = new Date(this.createdAt);
@@ -59,7 +58,7 @@ export class Lending {
     return tDate.toJSON().substring(2, 10).split('-').join('.') + '.';
   }
 
-  @Expose({ name: 'createdAt', groups: ['find'] })
+  @Expose({ name: 'createdAt', groups: ['lendings.findOne'] })
   getCreatedAt() {
     const date = new Date(this.createdAt);
     return date.toJSON().substring(2, 10).split('-').join('.') + '.';
