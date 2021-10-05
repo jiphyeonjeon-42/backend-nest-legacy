@@ -24,7 +24,7 @@ async function checkUser(
   const userData = await usersRepository.findOne(userId);
   if (userData == undefined) return 0;
   const today: Date = new Date();
-  const penalty: Date = new Date(userData['penaltiyAt']);
+  const penalty: Date = new Date(userData['penaltyAt']);
   const lendingCnt = await lenidngsRepository
     .createQueryBuilder('lending')
     .select()

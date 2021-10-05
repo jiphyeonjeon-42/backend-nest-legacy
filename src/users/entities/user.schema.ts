@@ -19,7 +19,7 @@ export const UserSchema = new EntitySchema<User>({
     slack: {
       type: String,
     },
-    penaltiyAt: {
+    penaltyAt: {
       type: Date,
     },
     reservationCnt: {

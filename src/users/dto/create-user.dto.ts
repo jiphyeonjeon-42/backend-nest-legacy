@@ -16,7 +16,7 @@ export class CreateUserDto {
   readonly slack: string;
 
   @IsDate()
-  readonly penaltiyAt: Date;
+  readonly penaltyAt: Date;
 
   @IsNumber()
   readonly reservationCnt: number;

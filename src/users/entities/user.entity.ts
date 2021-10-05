@@ -35,7 +35,7 @@ export class User {
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   @Exclude()
-  penaltiyAt: Date;
+  penaltyAt: Date;
 
   @Column({ default: 0 })
   @Exclude()
@@ -70,12 +70,12 @@ export class User {
 
   @Expose({ groups: ['search'] })
   get isPenalty() {
-    return new Date() <= this.penaltiyAt;
+    return new Date() <= this.penaltyAt;
   }
 
   @Expose({ groups: ['findAll', 'find'] })
   get penaltyDays() {
-    const penalty = new Date(this.penaltiyAt);
+    const penalty = new Date(this.penaltyAt);
     const today = new Date();
     if (penalty < today) return '-';
     return Math.ceil(Math.abs(+penalty - +today) / (1000 * 3600 * 24));
