@@ -22,4 +22,10 @@ export default () => ({
     url: process.env.AUTH_URL,
     callbackUrl: process.env.CALLBACK_URL,
   },
+  slack: {
+    client_id: process.env.SLACK_CLIENT_ID,
+    client_secret: process.env.SLACK_CLIENT_SECRET,
+    sign_secret: process.env.SIGNING_SECRET,
+    access_token: process.env.BOT_USER_OAUTH_ACCESS_TOKEN,
+  },
 });

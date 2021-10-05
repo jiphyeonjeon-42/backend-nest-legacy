@@ -1,13 +1,20 @@
-import { Injectable, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class FtAuthGuard extends AuthGuard('ftSeoul') {
+  constructor(private configService: ConfigService) {
+    super();
+  }
   handleRequest(err, user, info, context: ExecutionContext) {
+    //Nope, I don't 선택
     if (err || !user) {
-      const res = context.switchToHttp().getResponse();
-      return res.redirect('/');
-      //return res.status(302).redirect('http://localhost:3001/api/auth');
+      throw err || new UnauthorizedException();
     }
     return user;
   }
