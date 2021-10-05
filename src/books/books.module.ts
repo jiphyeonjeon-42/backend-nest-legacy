@@ -20,6 +20,6 @@ import { Reservation } from 'src/reservations/entities/reservation.entity';
     ]),
     SearchModule,
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, BooksService],
 })
 export class BooksModule {}

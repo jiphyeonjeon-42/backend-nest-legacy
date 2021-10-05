@@ -41,10 +41,6 @@ export class User {
   @Exclude()
   lendingCnt: number;
 
-  @Column({ default: 0 })
-  @Exclude()
-  reservationCnt: number;
-
   @Column({ default: false })
   @Exclude()
   librarian: boolean;

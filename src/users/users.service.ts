@@ -12,7 +12,7 @@ export class UsersService {
     private readonly userRepository: UserRepository, // 1. DB와의 연결을 정의
   ) {}
 
-  async findOne(id: string): Promise<User> {
+  async findOne(id: number): Promise<User> {
     let user: User = null;
     try {
       user = await this.userRepository.findOne({ where: { id } });
