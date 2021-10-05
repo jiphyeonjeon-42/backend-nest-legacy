@@ -22,7 +22,7 @@ export class User {
   id: number;
 
   @Column()
-  @Expose({ groups: ['findAll'] })
+  @Expose({ groups: ['findAll', 'find'] })
   login: string;
 
   @Column()
@@ -34,12 +34,8 @@ export class User {
   slack: string;
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
-  @Expose({ groups: ['findAll'] })
-  penaltiyAt: Date;
-
-  @Column({ default: 0 })
   @Exclude()
-  lendingCnt: number;
+  penaltiyAt: Date;
 
   @Column({ default: 0 })
   @Exclude()
@@ -75,5 +71,13 @@ export class User {
   @Expose({ groups: ['search'] })
   get isPenalty() {
     return new Date() <= this.penaltiyAt;
+  }
+
+  @Expose({ groups: ['findAll', 'find'] })
+  get penaltyDays() {
+    const penalty = new Date(this.penaltiyAt);
+    const today = new Date();
+    if (penalty < today) return '-';
+    return Math.ceil(Math.abs(+penalty - +today) / (1000 * 3600 * 24));
   }
 }

@@ -19,6 +19,7 @@ import { Reservation } from './reservations/entities/reservation.entity';
 import { AuthModule } from './auth/auth.module';
 import { SearchModule } from './search/search.module';
 import { SeedModule } from './seed/seed.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { SeedModule } from './seed/seed.module';
     }),
     SearchModule,
     SeedModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],

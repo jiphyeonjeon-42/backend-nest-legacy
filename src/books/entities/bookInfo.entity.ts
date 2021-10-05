@@ -27,7 +27,15 @@ export class BookInfo {
   id: number;
 
   @Column()
-  @Expose({ groups: ['books.findOne', 'books.findInfo', 'books.searchBook'] })
+  @Expose({
+    groups: [
+      'books.findOne',
+      'books.findInfo',
+      'books.searchBook',
+      'lendings.findAll',
+      'lendings.findOne',
+    ],
+  })
   title: string;
 
   @Column()
@@ -45,7 +53,7 @@ export class BookInfo {
   isbn: string;
 
   @Column()
-  @Expose({ groups: ['books.findOne', 'books.findInfo'] })
+  @Expose({ groups: ['books.findOne', 'books.findInfo', 'lendings.findOne'] })
   image: string;
 
   @Column({
@@ -88,7 +96,6 @@ export class BookInfo {
   @Expose({ name: 'publishedAt', groups: ['books.findOne', 'books.findInfo'] })
   getDate() {
     const date = new Date(this.publishedAt);
-    console.log(date);
-    return date.getFullYear() + '년 ' + date.getMonth() + '월';
+    return date.getFullYear() + '년 ' + (date.getMonth() + 1) + '월';
   }
 }

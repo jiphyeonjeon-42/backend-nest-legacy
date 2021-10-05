@@ -22,9 +22,6 @@ export const UserSchema = new EntitySchema<User>({
     penaltiyAt: {
       type: Date,
     },
-    lendingCnt: {
-      type: Number,
-    },
     reservationCnt: {
       type: Number,
     },
