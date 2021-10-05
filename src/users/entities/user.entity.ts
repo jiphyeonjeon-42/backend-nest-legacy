@@ -10,7 +10,7 @@ import {
 import { Returning } from '../../returns/entities/return.entity';
 import { Lending } from '../../lendings/entities/lending.entity';
 import { Reservation } from 'src/reservations/entities/reservation.entity';
-import { Exclude, Expose } from 'class-transformer';
+import { Expose } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -22,58 +22,63 @@ export class User {
   id: number;
 
   @Column()
-  @Expose({ groups: ['findAll', 'find'] })
+  @Expose({ groups: ['lendings.findAll', 'lendings.findOne'] })
   login: string;
 
   @Column()
-  @Exclude()
+  @Expose({ groups: [] })
   intra: number;
 
   @Column({ default: '0' })
-  @Exclude()
+  @Expose({ groups: [] })
   slack: string;
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
-  @Exclude()
+  @Expose({ groups: [] })
   penaltiyAt: Date;
 
   @Column({ default: 0 })
-  @Exclude()
+  @Expose({ groups: [] })
   reservationCnt: number;
 
   @Column({ default: false })
-  @Exclude()
+  @Expose({ groups: [] })
   librarian: boolean;
 
   @CreateDateColumn()
-  @Exclude()
+  @Expose({ groups: [] })
   createdAt: Date;
 
   @UpdateDateColumn()
-  @Exclude()
+  @Expose({ groups: [] })
   updatedAt: Date;
 
   @OneToMany(() => Returning, (returning) => returning.user)
+  @Expose({ groups: [] })
   returnings: Returning[];
 
   @OneToMany(() => Returning, (returning) => returning.librarian)
+  @Expose({ groups: [] })
   librarianReturnings: Returning[];
 
   @OneToMany(() => Lending, (lending) => lending.librarian)
+  @Expose({ groups: [] })
   librarianLendings: Lending[];
 
   @OneToMany(() => Lending, (lending) => lending.user)
+  @Expose({ groups: [] })
   lendings: Lending[];
 
   @OneToMany(() => Reservation, (reservation) => reservation.user)
+  @Expose({ groups: [] })
   reservations: Reservation[];
 
-  @Expose({ groups: ['search'] })
+  @Expose({ groups: ['users.search'] })
   get isPenalty() {
     return new Date() <= this.penaltiyAt;
   }
 
-  @Expose({ groups: ['findAll', 'find'] })
+  @Expose({ groups: ['lendings.findAll', 'lendings.findOne'] })
   get penaltyDays() {
     const penalty = new Date(this.penaltiyAt);
     const today = new Date();

@@ -25,7 +25,14 @@ export class Book {
   @Column()
   donator: string;
 
-  @Expose({ groups: ['books.findOne', 'books.searchBook'] })
+  @Expose({
+    groups: [
+      'books.findOne',
+      'books.searchBook',
+      'lendings.findOne',
+      'lendings.findAll',
+    ],
+  })
   @Column()
   callSign: string;
 
@@ -42,9 +49,11 @@ export class Book {
   updatedAt: Date;
 
   @ManyToOne(() => BookInfo, (bookInfo) => bookInfo.books)
+  @Expose({ groups: ['users.search', 'books.searchBook'] })
   info: BookInfo;
 
   @OneToMany(() => Reservation, (reservation) => reservation.book)
+  @Expose({ groups: [] })
   reservations: Reservation[];
 
   @OneToMany(() => Lending, (lending) => lending.book)

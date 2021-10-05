@@ -26,7 +26,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @SerializeOptions({ groups: ['search'] })
+  @SerializeOptions({ groups: ['users.search'] })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/search')
   search(
