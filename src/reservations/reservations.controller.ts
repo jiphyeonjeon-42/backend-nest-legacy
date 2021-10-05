@@ -44,10 +44,7 @@ export class ReservationsController {
     if (reservationBookCheck) {
       throw new BadRequestException('예약하신 책입니다.');
     }
-    const userCount = await this.reservationsService.findOneCnt(
-      dto.userId,
-      'user',
-    );
+    const userCount = await this.reservationsService.userCnt(dto.userId);
     if (userCount >= 2) {
       throw new BadRequestException(
         '집현전의 도서는 2권까지 예약할 수 있습니다.',
@@ -69,10 +66,7 @@ export class ReservationsController {
       '`' +
       '이 예약되었습니다.';
     this.slackbotService.publishMessage(findUser.slack, message);
-    const bookCount = await this.reservationsService.findOneCnt(
-      dto.bookId,
-      'book',
-    );
+    const bookCount = await this.reservationsService.bookCnt(dto.bookId);
     return { count: bookCount };
   }
 

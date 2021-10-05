@@ -13,17 +13,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { Reservation } from 'src/reservations/entities/reservation.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ReservationRepository } from 'src/reservations/reservations.repository';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ReservationsService } from 'src/reservations/reservations.service';
 
 @Controller('books')
 export class BooksController {
   constructor(
     private readonly booksService: BooksService,
-    @InjectRepository(Reservation)
-    private readonly reservationRepository: ReservationRepository,
+    private readonly reservationsService: ReservationsService,
   ) {}
 
   @Post()
@@ -78,12 +75,7 @@ export class BooksController {
   @UseGuards(JwtAuthGuard)
   @Get(':id/reservations/count')
   async reservationWait(@Param('id') id: string) {
-    const [list, count] = await this.reservationRepository.findAndCount({
-      where: {
-        book: { id: id },
-      },
-    });
-    //console.log(list);
+    const count = this.reservationsService.bookCnt(parseInt(id));
     return { count: count };
   }
 

@@ -33,23 +33,21 @@ export class ReservationsService {
     }
   }
 
-  async findOneCnt(itemId: number, item: string) {
-    const count = 0;
-    if (item === 'book') {
-      const [list, count] = await this.reservationRepository.findAndCount({
-        where: {
-          book: { id: itemId },
-        },
-      });
-      return count;
-    } else if (item === 'user') {
-      const [list, count] = await this.reservationRepository.findAndCount({
-        where: {
-          user: { id: itemId },
-        },
-      });
-      return count;
-    }
+  async bookCnt(itemId: number) {
+    const [list, count] = await this.reservationRepository.findAndCount({
+      where: {
+        book: { id: itemId },
+      },
+    });
+    return count;
+  }
+
+  async userCnt(itemId: number) {
+    const [list, count] = await this.reservationRepository.findAndCount({
+      where: {
+        user: { id: itemId },
+      },
+    });
     return count;
   }
 
