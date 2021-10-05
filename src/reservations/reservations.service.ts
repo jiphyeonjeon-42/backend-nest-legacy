@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 import { Book } from 'src/books/entities/book.entity';
@@ -11,11 +12,15 @@ import { ReservationRepository } from './reservations.repository';
 
 @Injectable()
 export class ReservationsService {
+  static isReservation() {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectRepository(Reservation)
     private readonly reservationRepository: ReservationRepository, // 1. DB와의 연결을 정의
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
+    private schedulerRegistry: SchedulerRegistry,
   ) {}
 
   async create(dto: CreateReservationDto) {

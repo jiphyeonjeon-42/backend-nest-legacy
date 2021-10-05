@@ -34,13 +34,14 @@ export class LendingsController {
   }
   @SerializeOptions({ groups: ['findAll'] })
   @UseInterceptors(ClassSerializerInterceptor)
-  @Get()
+  @Get('/search')
   async findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit = 5,
     @Query('sort') sort = 'new',
+    @Query() word?: string,
   ): Promise<Pagination<Lending>> {
-    return this.lendingsService.findAll({ page, limit }, sort);
+    return this.lendingsService.findAll({ page, limit }, sort, word);
   }
 
   @SerializeOptions({ groups: ['find'] })

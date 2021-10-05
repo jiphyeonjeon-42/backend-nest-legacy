@@ -39,10 +39,6 @@ export class User {
 
   @Column({ default: 0 })
   @Exclude()
-  lendingCnt: number;
-
-  @Column({ default: 0 })
-  @Exclude()
   reservationCnt: number;
 
   @Column({ default: false })

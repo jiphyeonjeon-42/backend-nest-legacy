@@ -40,7 +40,7 @@ export class Lending {
   user: User;
 
   @ManyToOne(() => User, (librarian) => librarian.librarianLendings)
-  @Exclude()
+  @Expose()
   librarian: User;
 
   @Expose({ groups: ['findAll', 'find'] })
@@ -48,7 +48,7 @@ export class Lending {
   book: Book;
 
   @OneToOne(() => Returning, (returning) => returning.lending)
-  @Exclude()
+  @Expose()
   returning: Returning;
 
   @Expose({ name: 'dueDate', groups: ['findAll', 'find'] })

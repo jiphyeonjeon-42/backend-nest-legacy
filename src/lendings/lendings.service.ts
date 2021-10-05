@@ -16,19 +16,32 @@ import {
   Pagination,
 } from 'nestjs-typeorm-paginate';
 
-async function checkLendingCnt(userId: number) {
-  const userData = await getConnection().getRepository('User').findOne(userId);
+async function checkUser(
+  lenidngsRepository: Repository<Lending>,
+  usersRepository: Repository<User>,
+  userId: number,
+) {
+  const userData = await usersRepository.findOne(userId);
   if (userData == undefined) return 0;
   const today: Date = new Date();
   const penalty: Date = new Date(userData['penaltiyAt']);
-  if (2 <= userData['lendingCnt'] || today <= penalty) return 0;
+  const lendingCnt = await lenidngsRepository
+    .createQueryBuilder('lending')
+    .select()
+    .leftJoinAndSelect('lending.returning', 'returning')
+    .innerJoinAndSelect('lending.user', 'user')
+    .where('returning.id is null')
+    .andWhere('user.id=:userId', { userId: userId })
+    .getCount();
+  if (2 <= lendingCnt || today <= penalty) return 0;
   return 1;
 }
 
-async function checkLibrarian(librarianId: number) {
-  const librarian = await getConnection()
-    .getRepository('User')
-    .findOne(librarianId);
+async function checkLibrarian(
+  usersRepository: Repository<User>,
+  librarianId: number,
+) {
+  const librarian = await usersRepository.findOne(librarianId);
   if (librarian == undefined) return 0;
   if (!librarian['librarian']) return 0;
   return 1;
@@ -39,26 +52,27 @@ export class LendingsService {
   constructor(
     @InjectRepository(Lending)
     private readonly lendingsRepository: Repository<Lending>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
     private connection: Connection,
   ) {}
 
   async create(dto: CreateLendingDto, librarianId: number) {
     if (
-      !(await checkLendingCnt(dto.userId)) ||
-      !(await checkLibrarian(librarianId))
+      !(await checkUser(
+        this.lendingsRepository,
+        this.usersRepository,
+        dto.userId,
+      ))
+      // || !(await checkLibrarian(this.usersRepository, librarianId))
     )
       throw new BadRequestException('dto.userId || librarianId Error');
     try {
-      await this.connection.transaction(async (manager) => {
-        await manager.insert(Lending, {
-          condition: dto.condition,
-          user: { id: dto.userId },
-          librarian: { id: librarianId },
-          book: { id: dto.bookId },
-        });
-        await manager.update(User, dto.userId, {
-          lendingCnt: () => 'lendingCnt + 1',
-        });
+      await this.lendingsRepository.insert({
+        condition: dto.condition,
+        user: { id: dto.userId },
+        librarian: { id: librarianId },
+        book: { id: dto.bookId },
       });
     } catch (e) {
       throw new Error("lendings.service.create() catch'");
@@ -69,8 +83,9 @@ export class LendingsService {
   async findAll(
     options: IPaginationOptions,
     sort: string,
+    word?: string,
   ): Promise<Pagination<Lending>> {
-    if (!(sort == 'new' || sort == 'older'))
+    if (!(sort === 'new' || sort === 'older'))
       throw new BadRequestException('sort string Error');
     let standard = false;
     if (sort != 'new') standard = true;
@@ -82,6 +97,16 @@ export class LendingsService {
       .leftJoinAndSelect('book.info', 'info')
       .leftJoinAndSelect('lending.returning', 'returning')
       .where('returning.id is null');
+    if (Object.keys(word).length != 0) {
+      lendingData = lendingData
+        .where('returning.id is null')
+        .andWhere(
+          '(info.title like :word or user.login like :word or book.callSign like :word)',
+          {
+            word: `%${word['word']}%`,
+          },
+        );
+    }
     if (standard) lendingData = lendingData.orderBy('lending.createdAt', 'ASC');
     else lendingData = lendingData.orderBy('lending.createdAt', 'DESC');
     return paginate<Lending>(lendingData, options);
