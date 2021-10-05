@@ -58,7 +58,7 @@ export class Book {
         return '-';
       } else {
         const tDate = new Date(lending['createdAt']);
-        tDate.setDate(tDate.getDate() + 15);
+        tDate.setDate(tDate.getDate() + 14);
         return tDate.toJSON().substring(2, 10).split('-').join('.');
       }
     }

@@ -19,9 +19,6 @@ export class CreateUserDto {
   readonly penaltiyAt: Date;
 
   @IsNumber()
-  readonly lendingCnt: number;
-
-  @IsNumber()
   readonly reservationCnt: number;
 
   @IsOptional()

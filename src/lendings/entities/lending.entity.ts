@@ -24,38 +24,44 @@ export class Lending {
   id: number;
 
   @Column({ default: '' })
-  @Expose({ groups: ['findAll'] })
+  @Expose({ groups: ['findAll', 'find'] })
   condition: string;
 
   @CreateDateColumn()
-  @Expose({ groups: ['findAll'] })
+  @Expose({ groups: ['find'] })
   createdAt: Date;
 
   @UpdateDateColumn()
   @Exclude()
   updatedAt: Date;
 
-  @Expose({ groups: ['findAll'] })
+  @Expose({ groups: ['findAll', 'find'] })
   @ManyToOne(() => User, (user) => user.lendings)
   user: User;
 
   @ManyToOne(() => User, (librarian) => librarian.librarianLendings)
-  @Exclude()
+  @Expose()
   librarian: User;
 
-  @Expose({ groups: ['findAll'] })
+  @Expose({ groups: ['findAll', 'find'] })
   @ManyToOne(() => Book, (book) => book.lendings)
   book: Book;
 
   @OneToOne(() => Returning, (returning) => returning.lending)
-  @Exclude()
+  @Expose()
   returning: Returning;
 
-  @Expose({ name: 'dueDate', groups: ['findAll'] })
-  getDate() {
+  @Expose({ name: 'dueDate', groups: ['findAll', 'find'] })
+  getdueDate() {
+    if (this.returning) throw new Error('lendings.service.find(All) catch');
+    const tDate = new Date(this.createdAt);
+    tDate.setDate(tDate.getDate() + 14);
+    return tDate.toJSON().substring(2, 10).split('-').join('.') + '.';
+  }
+
+  @Expose({ name: 'createdAt', groups: ['find'] })
+  getCreatedAt() {
     const date = new Date(this.createdAt);
-    return (
-      date.getFullYear() + '.' + date.getMonth() + '.' + date.getDate() + '.'
-    );
+    return date.toJSON().substring(2, 10).split('-').join('.') + '.';
   }
 }
