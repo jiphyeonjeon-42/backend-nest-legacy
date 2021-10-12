@@ -11,7 +11,7 @@ import {
 import { User } from '../../users/entities/user.entity';
 import { Returning } from '../../returnings/entities/returning.entity';
 import { Book } from '../../books/entities/book.entity';
-import { Exclude, Expose } from 'class-transformer';
+import { Expose } from 'class-transformer';
 
 @Entity()
 export class Lending {
@@ -50,7 +50,10 @@ export class Lending {
   @Expose({ groups: [] })
   returning: Returning;
 
-  @Expose({ name: 'dueDate', groups: ['lendings.findAll', 'lendings.findOne'] })
+  @Expose({
+    name: 'dueDate',
+    groups: ['lendings.findAll', 'lendings.findOne', 'reservations.search'],
+  })
   getdueDate() {
     if (this.returning) throw new Error('lendings.service.find(All) catch');
     const tDate = new Date(this.createdAt);

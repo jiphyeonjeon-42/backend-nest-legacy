@@ -86,9 +86,7 @@ export class LendingsService {
         now.setDate(now.getDate() + 14),
       ).toLocaleDateString();
       const message =
-        '📔' +
-        ' 대출 알리미 ' +
-        '📔\n' +
+        '📔 대출 알리미 📔\n' +
         '대출 하신 ' +
         '`' +
         title +

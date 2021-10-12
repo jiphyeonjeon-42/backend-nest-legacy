@@ -1,10 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
-import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 import { Book } from 'src/books/entities/book.entity';
 import { User } from 'src/users/entities/user.entity';
-import { getConnection } from 'typeorm';
+import { getConnection, MoreThanOrEqual } from 'typeorm';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { Reservation } from './entities/reservation.entity';
 import { ReservationRepository } from './reservations.repository';
@@ -15,8 +14,7 @@ export class ReservationsService {
     throw new Error('Method not implemented.');
   }
   constructor(
-    @InjectRepository(Reservation)
-    private readonly reservationRepository: ReservationRepository, // 1. DB와의 연결을 정의
+    private readonly reservationsRepository: ReservationRepository, // 1. DB와의 연결을 정의
   ) {}
 
   async create(dto: CreateReservationDto) {
@@ -33,43 +31,106 @@ export class ReservationsService {
     }
   }
 
-  async findOneCnt(itemId: number, item: string) {
-    const count = 0;
-    if (item === 'book') {
-      const [list, count] = await this.reservationRepository.findAndCount({
-        where: {
+  async bookCnt(itemId: number) {
+    const [list, count] = await this.reservationsRepository.findAndCount({
+      where: [
+        {
           book: { id: itemId },
+          endAt: MoreThanOrEqual(new Date()),
+          canceledAt: MoreThanOrEqual(new Date()),
         },
-      });
-      return count;
-    } else if (item === 'user') {
-      const [list, count] = await this.reservationRepository.findAndCount({
-        where: {
+        {
+          book: { id: itemId },
+          endAt: null,
+          canceledAt: null,
+        },
+      ],
+    });
+    return count;
+  }
+
+  async userCnt(itemId: number) {
+    const [list, count] = await this.reservationsRepository.findAndCount({
+      where: [
+        {
           user: { id: itemId },
+          endAt: MoreThanOrEqual(new Date()),
+          canceledAt: MoreThanOrEqual(new Date()),
         },
-      });
-      return count;
-    }
+        {
+          user: { id: itemId },
+          endAt: null,
+          canceledAt: null,
+        },
+      ],
+    });
     return count;
   }
 
   async reservationBookCheck(dto: CreateReservationDto) {
-    const check = await this.reservationRepository.findOne({
-      where: { user: dto.userId, book: dto.bookId },
+    const [list, count] = await this.reservationsRepository.findAndCount({
+      where: [
+        {
+          user: { id: dto.userId },
+          book: { id: dto.bookId },
+          endAt: MoreThanOrEqual(new Date()),
+          canceledAt: MoreThanOrEqual(new Date()),
+        },
+        {
+          user: { id: dto.userId },
+          book: { id: dto.bookId },
+          endAt: null,
+          canceledAt: null,
+        },
+      ],
     });
-    return check;
+    return count;
   }
 
-  async search(options: IPaginationOptions, word: string, filters: string[]) {
-    let queryBuilder =
-      this.reservationRepository.createQueryBuilder('reservation');
+  // async reservationBookCheck(dto: CreateReservationDto) {
+  //   // const check = await this.reservationRepository.findOne({
+  //   //   where: { user: dto.userId, book: dto.bookId },
+  //   // });
+  //   let queryBuilder: Reservation;
+  //   const endAtDate = await this.reservationRepository
+  //     .createQueryBuilder('reservation')
+  //     .where('reservation.user = :user AND reservation.book = :book', {
+  //       user: dto.userId,
+  //       book: dto.bookId,
+  //     })
+  //     .andWhere('reservation.endAt >= :current_date', {
+  //       current_date: new Date(),
+  //     })
+  //     .getOne();
+  //   const endAtNull = await this.reservationRepository
+  //     .createQueryBuilder('reservation')
+  //     .where('reservation.user = :user AND reservation.book = :book', {
+  //       user: dto.userId,
+  //       book: dto.bookId,
+  //     })
+  //     .andWhere('reservation.endAt IS NULL')
+  //     .getOne();
+  //   //console.log(endAtDate);
+  //   //console.log(endAtNull);
+  //   if (endAtDate) queryBuilder = endAtDate;
+  //   else if (endAtNull) queryBuilder = endAtNull;
+  //   return queryBuilder;
+  // }
+
+  async search(options: IPaginationOptions, query: string, filters: string[]) {
+    let queryBuilder = this.reservationsRepository
+      .createQueryBuilder('reservation')
+      .leftJoinAndSelect('reservation.user', 'user')
+      .leftJoinAndSelect('reservation.book', 'book')
+      .leftJoinAndSelect('book.info', 'info')
+      .leftJoinAndSelect('book.lendings', 'lendings');
     if (!filters.includes('proceeding') && !filters.includes('finish')) {
       // 둘다 선택안했을 때
       queryBuilder = queryBuilder.where('id IS NULL'); //다시 확인
     } else if (filters.includes('proceeding') && !filters.includes('finish')) {
       // proceeding
       queryBuilder = queryBuilder
-        .where('reservation.endAt > :current_date', {
+        .where('reservation.endAt >= :current_date', {
           current_date: new Date(),
         })
         .orWhere('reservation.endAt IS NULL')
@@ -78,10 +139,16 @@ export class ReservationsService {
       // finish
       queryBuilder = queryBuilder
         .where('reservation.canceledAt IS NOT NULL')
-        .orWhere('reservation.endAt <= :current_date', {
+        .orWhere('reservation.endAt < :current_date', {
           current_date: new Date(),
         });
     }
+    queryBuilder = queryBuilder.where(
+      '(user.login like :query or info.title like :query)',
+      {
+        query: query,
+      },
+    );
     return paginate(queryBuilder, options);
   }
 

@@ -8,7 +8,6 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   SerializeOptions,
-  ParseArrayPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 
