@@ -13,6 +13,9 @@ import {
   Query,
   ParseIntPipe,
   ParseArrayPipe,
+  SerializeOptions,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ReservationsService } from './reservations.service';
@@ -58,29 +61,25 @@ export class ReservationsController {
     const findUser = await this.userService.findOne(dto.userId);
     const { title } = await this.booksService.findOne(dto.bookId);
     const message =
-      '📖' +
-      ' 예약 알리미 ' +
-      '📖\n' +
-      '`' +
-      title +
-      '`' +
-      '이 예약되었습니다.';
-    this.slackbotService.publishMessage(findUser.slack, message);
+      '📖 예약 알리미 📖\n' + '`' + title + '`' + '이 예약되었습니다.';
     const bookCount = await this.reservationsService.bookCnt(dto.bookId);
+    this.slackbotService.publishMessage(findUser.slack, message);
     return { count: bookCount };
   }
 
   @UseGuards(JwtAuthGuard)
+  @SerializeOptions({ groups: ['reservations.search'] })
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('search')
   async search(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit = 5,
     @Query('filters', new DefaultValuePipe([]), ParseArrayPipe)
     filters: string[] = [],
-    @Query('word') word?: string,
+    @Query('query') query = '',
   ) {
     try {
-      return this.reservationsService.search({ page, limit }, word, filters);
+      return this.reservationsService.search({ page, limit }, query, filters);
     } catch (error) {
       return error;
     }

@@ -22,7 +22,9 @@ export class User {
   id: number;
 
   @Column()
-  @Expose({ groups: ['lendings.findAll', 'lendings.findOne'] })
+  @Expose({
+    groups: ['lendings.findAll', 'lendings.findOne', 'reservations.search'],
+  })
   login: string;
 
   @Column()

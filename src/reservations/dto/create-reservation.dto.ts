@@ -1,7 +1,8 @@
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
 
 export class CreateReservationDto {
   @IsNumber()
+  @IsOptional()
   userId: number;
 
   @IsNumber()

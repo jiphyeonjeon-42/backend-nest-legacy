@@ -31,6 +31,7 @@ export class Book {
       'books.searchBook',
       'lendings.findOne',
       'lendings.findAll',
+      'reservations.search',
     ],
   })
   @Column()
@@ -49,7 +50,9 @@ export class Book {
   updatedAt: Date;
 
   @ManyToOne(() => BookInfo, (bookInfo) => bookInfo.books)
-  @Expose({ groups: ['users.search', 'books.searchBook'] })
+  @Expose({
+    groups: ['users.search', 'books.searchBook', 'reservations.search'],
+  })
   info: BookInfo;
 
   @OneToMany(() => Reservation, (reservation) => reservation.book)
@@ -57,7 +60,7 @@ export class Book {
   reservations: Reservation[];
 
   @OneToMany(() => Lending, (lending) => lending.book)
-  @Expose({ groups: [] })
+  @Expose({ groups: ['reservations.search'] })
   lendings: Lending[];
 
   @Expose({ name: 'dueDate', groups: ['books.findOne'] })

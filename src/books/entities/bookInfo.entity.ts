@@ -34,6 +34,7 @@ export class BookInfo {
       'books.searchBook',
       'lendings.findAll',
       'lendings.findOne',
+      'reservations.search',
     ],
   })
   title: string;
