@@ -74,8 +74,8 @@ export class BooksController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id/reservations/count')
-  async reservationWait(@Param('id') id: string) {
-    const count = this.reservationsService.bookCnt(parseInt(id));
+  async reservationWait(@Param('id') id: number) {
+    const count = await this.reservationsService.bookCnt(id);
     return { count: count };
   }
 

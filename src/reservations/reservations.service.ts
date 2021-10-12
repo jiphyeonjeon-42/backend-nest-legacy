@@ -37,7 +37,7 @@ export class ReservationsService {
         {
           book: { id: itemId },
           endAt: MoreThanOrEqual(new Date()),
-          canceledAt: MoreThanOrEqual(new Date()),
+          canceledAt: null,
         },
         {
           book: { id: itemId },
@@ -55,7 +55,7 @@ export class ReservationsService {
         {
           user: { id: itemId },
           endAt: MoreThanOrEqual(new Date()),
-          canceledAt: MoreThanOrEqual(new Date()),
+          canceledAt: null,
         },
         {
           user: { id: itemId },
