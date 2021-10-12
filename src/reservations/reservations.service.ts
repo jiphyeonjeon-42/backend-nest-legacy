@@ -146,7 +146,7 @@ export class ReservationsService {
     queryBuilder = queryBuilder.where(
       '(user.login like :query or info.title like :query)',
       {
-        query: query,
+        query: `%${query}%`,
       },
     );
     return paginate(queryBuilder, options);
