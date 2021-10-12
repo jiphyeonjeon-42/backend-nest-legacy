@@ -87,36 +87,6 @@ export class ReservationsService {
     return count;
   }
 
-  // async reservationBookCheck(dto: CreateReservationDto) {
-  //   // const check = await this.reservationRepository.findOne({
-  //   //   where: { user: dto.userId, book: dto.bookId },
-  //   // });
-  //   let queryBuilder: Reservation;
-  //   const endAtDate = await this.reservationRepository
-  //     .createQueryBuilder('reservation')
-  //     .where('reservation.user = :user AND reservation.book = :book', {
-  //       user: dto.userId,
-  //       book: dto.bookId,
-  //     })
-  //     .andWhere('reservation.endAt >= :current_date', {
-  //       current_date: new Date(),
-  //     })
-  //     .getOne();
-  //   const endAtNull = await this.reservationRepository
-  //     .createQueryBuilder('reservation')
-  //     .where('reservation.user = :user AND reservation.book = :book', {
-  //       user: dto.userId,
-  //       book: dto.bookId,
-  //     })
-  //     .andWhere('reservation.endAt IS NULL')
-  //     .getOne();
-  //   //console.log(endAtDate);
-  //   //console.log(endAtNull);
-  //   if (endAtDate) queryBuilder = endAtDate;
-  //   else if (endAtNull) queryBuilder = endAtNull;
-  //   return queryBuilder;
-  // }
-
   async search(options: IPaginationOptions, query: string, filters: string[]) {
     let queryBuilder = this.reservationsRepository
       .createQueryBuilder('reservation')
