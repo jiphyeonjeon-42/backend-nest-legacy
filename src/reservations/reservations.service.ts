@@ -12,7 +12,7 @@ async function getProcResQuery(
   reservationsRepository: Repository<Reservation>,
   reservationId: number,
 ) {
-  const now = new Date()
+  const now = new Date();
 
   return reservationsRepository
     .createQueryBuilder('reservation')
@@ -51,11 +51,12 @@ export class ReservationsService {
     });
   }
 
-  async getReservationId(bookId: number): Promise<number> | undefined {
+  async getReservation(bookId: number): Promise<Reservation> | undefined {
     const connection = getConnection();
     const reservationData = await this.reservationsRepository
       .createQueryBuilder('reservation')
       .leftJoinAndSelect('reservation.book', 'book')
+      .leftJoinAndSelect('reservation.user', 'user')
       .where('book.id=:bookId', { bookId: bookId })
       .andWhere(
         '(reservation.endAt > :current_date or reservation.endAt IS NULL)',
@@ -68,7 +69,7 @@ export class ReservationsService {
       .getOne();
 
     if (reservationData == undefined) return undefined;
-    return reservationData.id;
+    return reservationData;
   }
 
   async setEndAt(reservationId: number): Promise<boolean> {
@@ -81,7 +82,10 @@ export class ReservationsService {
       0,
       0,
     );
-    const reservationQuery = await getProcResQuery(this.reservationsRepository, reservationId)
+    const reservationQuery = await getProcResQuery(
+      this.reservationsRepository,
+      reservationId,
+    );
     if ((await reservationQuery.getOne()) == undefined) return false;
     reservationQuery
       .where('id=:reservationId', { reservationId: reservationId })
@@ -91,7 +95,7 @@ export class ReservationsService {
       .execute();
     this.addTimeout(
       String(reservationId),
-      date.valueOf() - now.valueOf() + (1000 * 600),
+      date.valueOf() - now.valueOf() + 1000 * 600,
     );
     return true;
   }
@@ -99,7 +103,10 @@ export class ReservationsService {
   async fetchEndAt(reservationId: number): Promise<boolean> {
     const now: Date = new Date();
 
-    const reservationQuery = await getProcResQuery(this.reservationsRepository, reservationId)
+    const reservationQuery = await getProcResQuery(
+      this.reservationsRepository,
+      reservationId,
+    );
     if ((await reservationQuery.getOne()) == undefined) return false;
     reservationQuery
       .where('id=:reservationId', { reservationId: reservationId })

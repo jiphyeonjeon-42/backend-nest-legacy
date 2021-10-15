@@ -74,6 +74,12 @@ export class LendingsService {
       // || !(await checkLibrarian(this.usersRepository, librarianId))
     )
       throw new BadRequestException('dto.userId || librarianId Error');
+
+    const reservationData = await this.reservationsService.getReservation(
+      dto.bookId,
+    );
+    if (reservationData != undefined && reservationData.user.id != dto.userId)
+      throw new BadRequestException('예약된 책입니다.');
     try {
       await this.lendingsRepository.insert({
         condition: dto.condition,
@@ -101,11 +107,8 @@ export class LendingsService {
       throw new Error("lendings.service.create() catch'");
     }
 
-    const reservationId = await this.reservationsService.getReservationId(
-      dto.bookId,
-    );
-    if (reservationId != undefined)
-      await this.reservationsService.fetchEndAt(reservationId);
+    if (reservationData != undefined)
+      await this.reservationsService.fetchEndAt(reservationData.id);
 
     return 'This action adds a new lending';
   }

@@ -47,11 +47,11 @@ export class ReturningsService {
     });
     const bookId = LendingData.book.id;
 
-    const reservationId = await this.reservationsService.getReservationId(
+    const reservationData = await this.reservationsService.getReservation(
       bookId,
     );
-    if (reservationId != undefined)
-      await this.reservationsService.setEndAt(reservationId);
+    if (reservationData != undefined)
+      await this.reservationsService.setEndAt(reservationData.id);
   }
 
   async findAll() {
