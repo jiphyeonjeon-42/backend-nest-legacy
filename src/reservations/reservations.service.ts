@@ -91,7 +91,7 @@ export class ReservationsService {
       .execute();
     this.addTimeout(
       String(reservationId),
-      date.valueOf() - now.valueOf() + 1000 * 600,
+      date.valueOf() - now.valueOf() + (1000 * 600),
     );
     return true;
   }
