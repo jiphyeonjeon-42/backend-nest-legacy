@@ -7,6 +7,7 @@ import { UsersModule } from 'src/users/users.module';
 import { BooksModule } from 'src/books/books.module';
 import { SlackbotModule } from 'src/slackbot/slackbot.module';
 import { User } from 'src/users/entities/user.entity';
+import { ReservationsModule } from 'src/reservations/reservations.module';
 
 @Module({
   controllers: [LendingsController],
@@ -16,6 +17,7 @@ import { User } from 'src/users/entities/user.entity';
     BooksModule,
     SlackbotModule,
     TypeOrmModule.forFeature([Lending, User]),
+    ReservationsModule,
   ],
   exports: [TypeOrmModule, LendingsService],
 })

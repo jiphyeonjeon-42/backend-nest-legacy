@@ -32,6 +32,7 @@ export class LendingsController {
     const librarianId = req.user.id;
     return this.lendingsService.create(createLendingDto, librarianId);
   }
+
   @SerializeOptions({ groups: ['lendings.findAll'] })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/search')
@@ -39,9 +40,9 @@ export class LendingsController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit = 5,
     @Query('sort') sort = 'new',
-    @Query() word?: string,
+    @Query() query?: string,
   ): Promise<Pagination<Lending>> {
-    return this.lendingsService.findAll({ page, limit }, sort, word);
+    return this.lendingsService.findAll({ page, limit }, sort, query);
   }
 
   @SerializeOptions({ groups: ['lendings.findOne'] })

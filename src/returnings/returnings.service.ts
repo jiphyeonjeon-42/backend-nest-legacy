@@ -21,9 +21,12 @@ export class ReturningsService {
     private readonly returningsRepository: Repository<Returning>,
     private connection: Connection,
     private schedulerRegistry: SchedulerRegistry,
+    private reservationsService: ReservationsService,
   ) {}
 
   async create(dto: CreateReturnDto) {
+    let LendingData: Lending;
+    let returningData: Returning;
     const returning = new Returning({
       condition: dto.condition,
       lending: new Lending({ id: dto.lendingId }),
@@ -32,12 +35,23 @@ export class ReturningsService {
     });
     try {
       await getConnection().transaction(async (manager) => {
-        await manager.save(returning);
+        returningData = await manager.recover(returning);
       });
     } catch (err) {
       throw new BadRequestException(err.sqlMessage);
     }
-    console.log(ReservationsService.isReservation());
+    const lendingsRepository = this.connection.getRepository(Lending);
+    LendingData = await lendingsRepository.findOne({
+      relations: ['book'],
+      where: returningData.lending,
+    });
+    const bookId = LendingData.book.id;
+
+    const reservationId = await this.reservationsService.getReservationId(
+      bookId,
+    );
+    if (reservationId != undefined)
+      await this.reservationsService.setEndAt(reservationId);
   }
 
   async findAll() {
