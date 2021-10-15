@@ -9,10 +9,12 @@ import { UserRepository } from 'src/users/user.repository';
 import { User } from 'src/users/entities/user.entity';
 import { SlackbotModule } from 'src/slackbot/slackbot.module';
 import { BooksModule } from 'src/books/books.module';
+import { LendingsModule } from 'src/lendings/lendings.module';
 
 @Module({
   imports: [
     UsersModule,
+    forwardRef(() => LendingsModule),
     forwardRef(() => BooksModule),
     SlackbotModule,
     TypeOrmModule.forFeature([

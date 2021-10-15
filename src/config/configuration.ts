@@ -21,6 +21,7 @@ export default () => ({
   auth: {
     url: process.env.AUTH_URL,
     callbackUrl: process.env.CALLBACK_URL,
+    callbackFailUrl: process.env.CALLBACKFAIL_URL,
   },
   slack: {
     client_id: process.env.SLACK_CLIENT_ID,

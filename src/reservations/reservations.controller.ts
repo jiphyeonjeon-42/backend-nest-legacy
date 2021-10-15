@@ -23,6 +23,7 @@ import { CreateReservationDto } from './dto/create-reservation.dto';
 import { SlackbotService } from 'src/slackbot/slackbot.service';
 import { UsersService } from 'src/users/users.service';
 import { BooksService } from 'src/books/books.service';
+import { LendingsService } from 'src/lendings/lendings.service';
 
 @Controller('reservations')
 export class ReservationsController {
@@ -31,6 +32,7 @@ export class ReservationsController {
     private readonly slackbotService: SlackbotService,
     private readonly userService: UsersService,
     private readonly booksService: BooksService,
+    private readonly lendingsService: LendingsService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -41,6 +43,13 @@ export class ReservationsController {
   ) {
     const { id } = req.user;
     dto.userId = id;
+    // lending check
+    const lendingCheck = await this.lendingsService.isLentBook(dto.bookId);
+    console.log(lendingCheck);
+    if (!lendingCheck) {
+      throw new BadRequestException('대출 되지 않은 책입니다.');
+    }
+
     //reservation count check
     const reservationBookCheck =
       await this.reservationsService.reservationBookCheck(dto);

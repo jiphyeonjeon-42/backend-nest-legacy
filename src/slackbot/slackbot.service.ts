@@ -20,7 +20,7 @@ export class SlackbotService {
         text: text,
       });
     } catch (error) {
-      console.error(error);
+      console.log('일치하는 슬랙아이디가 없습니다.');
     }
   }
 }
