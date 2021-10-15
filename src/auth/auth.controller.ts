@@ -28,23 +28,29 @@ export class AuthController {
   @UseGuards(FtAuthGuard)
   @Get('token')
   async getToken(@Req() req, @Res({ passthrough: true }) res: Response) {
-    const { intra, login, image_url } = req.user;
-    const ftUserInfo: ftTypes = {
-      intra,
-      login,
-      image: image_url,
-    };
-    let user = await this.userService.userSearch(ftUserInfo);
-    if (!user) {
-      user = await this.userService.userSave(ftUserInfo);
-    }
-    const jwtToken = await this.authService.jwtGen(req.user, user.id);
+    if (req.user) {
+      const { intra, login, image_url } = req.user;
+      const ftUserInfo: ftTypes = {
+        intra,
+        login,
+        image: image_url,
+      };
+      let user = await this.userService.userSearch(ftUserInfo);
+      if (!user) {
+        user = await this.userService.userSave(ftUserInfo);
+      }
+      const jwtToken = await this.authService.jwtGen(req.user, user.id);
 
-    res.cookie('access_token', jwtToken, {
-      httpOnly: true,
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-    });
-    return res.status(302).redirect(this.configService.get('auth.callbackUrl'));
+      res.cookie('access_token', jwtToken, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+      });
+      return res
+        .status(302)
+        .redirect(this.configService.get('auth.callbackUrl'));
+    } else {
+      return;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -62,7 +68,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('logout') //나중에 Post로 바꿔야함.
+  @Post('logout')
   async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token');
     res.redirect('/');

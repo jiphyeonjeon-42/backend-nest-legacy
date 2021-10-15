@@ -74,7 +74,7 @@ export class ReservationsService {
           user: { id: dto.userId },
           book: { id: dto.bookId },
           endAt: MoreThanOrEqual(new Date()),
-          canceledAt: MoreThanOrEqual(new Date()),
+          canceledAt: null,
         },
         {
           user: { id: dto.userId },

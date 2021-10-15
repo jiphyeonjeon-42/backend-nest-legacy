@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UpdateLendingDto } from './dto/update-lending.dto';
-import { Connection, Repository } from 'typeorm';
+import { Connection, IsNull, Repository } from 'typeorm';
 import { Lending } from './entities/lending.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
@@ -141,6 +141,14 @@ export class LendingsService {
     if (lendingData == undefined || lendingData['returning'])
       throw new NotFoundException();
     return lendingData;
+  }
+
+  async isLentBook(bookId: number) {
+    const findBook = await this.lendingsRepository.find({
+      relations: ['returning'],
+      where: { book: { id: bookId }, returning: { id: IsNull() } },
+    });
+    return findBook.length != 0;
   }
 
   update(id: number, updateLendingDto: UpdateLendingDto) {

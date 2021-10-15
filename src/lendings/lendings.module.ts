@@ -17,6 +17,6 @@ import { User } from 'src/users/entities/user.entity';
     SlackbotModule,
     TypeOrmModule.forFeature([Lending, User]),
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, LendingsService],
 })
 export class LendingsModule {}
