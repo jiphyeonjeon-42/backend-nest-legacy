@@ -1,21 +1,122 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Cron, SchedulerRegistry } from '@nestjs/schedule';
+import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 import { Book } from 'src/books/entities/book.entity';
 import { User } from 'src/users/entities/user.entity';
-import { getConnection, MoreThanOrEqual } from 'typeorm';
+import { getConnection, MoreThanOrEqual, Repository } from 'typeorm';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { Reservation } from './entities/reservation.entity';
 import { ReservationRepository } from './reservations.repository';
 
+async function getProcResQuery(
+  reservationsRepository: Repository<Reservation>,
+  reservationId: number,
+) {
+  const now = new Date();
+
+  return reservationsRepository
+    .createQueryBuilder('reservation')
+    .where('id=:reservationId', { reservationId: reservationId })
+    .andWhere(
+      '(reservation.endAt > :current_date or reservation.endAt IS NULL)',
+      {
+        current_date: now,
+      },
+    )
+    .andWhere('reservation.canceledAt IS NULL')
+    .orderBy('reservation.createdAt', 'ASC');
+}
+
 @Injectable()
 export class ReservationsService {
-  static isReservation() {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     private readonly reservationsRepository: ReservationRepository, // 1. DB와의 연결을 정의
+    private schedulerRegistry: SchedulerRegistry,
   ) {}
+
+  addTimeout(name: string, milliseconds: number) {
+    const callback = () => {
+      this.setEndAt(+name);
+    };
+
+    this.deleteInterval(name);
+    const timeout = setTimeout(callback, milliseconds);
+    this.schedulerRegistry.addTimeout(name, timeout);
+  }
+
+  deleteInterval(name: string) {
+    const timeouts = this.schedulerRegistry.getTimeouts();
+    timeouts.forEach((key) => {
+      if (key == name) this.schedulerRegistry.deleteTimeout(name);
+    });
+  }
+
+  async getReservation(bookId: number): Promise<Reservation> | undefined {
+    const connection = getConnection();
+    const reservationData = await this.reservationsRepository
+      .createQueryBuilder('reservation')
+      .leftJoinAndSelect('reservation.book', 'book')
+      .leftJoinAndSelect('reservation.user', 'user')
+      .where('book.id=:bookId', { bookId: bookId })
+      .andWhere(
+        '(reservation.endAt > :current_date or reservation.endAt IS NULL)',
+        {
+          current_date: new Date(),
+        },
+      )
+      .andWhere('reservation.canceledAt IS NULL')
+      .orderBy('reservation.createdAt', 'ASC')
+      .getOne();
+
+    if (reservationData == undefined) return undefined;
+    return reservationData;
+  }
+
+  async setEndAt(reservationId: number): Promise<boolean> {
+    const now: Date = new Date();
+    const date: Date = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + 2,
+      18,
+      0,
+      0,
+    );
+    const reservationQuery = await getProcResQuery(
+      this.reservationsRepository,
+      reservationId,
+    );
+    if ((await reservationQuery.getOne()) == undefined) return false;
+    reservationQuery
+      .where('id=:reservationId', { reservationId: reservationId })
+      .update({
+        endAt: date,
+      })
+      .execute();
+    this.addTimeout(
+      String(reservationId),
+      date.valueOf() - now.valueOf() + 1000 * 600,
+    );
+    return true;
+  }
+
+  async fetchEndAt(reservationId: number): Promise<boolean> {
+    const now: Date = new Date();
+
+    const reservationQuery = await getProcResQuery(
+      this.reservationsRepository,
+      reservationId,
+    );
+    if ((await reservationQuery.getOne()) == undefined) return false;
+    reservationQuery
+      .where('id=:reservationId', { reservationId: reservationId })
+      .update({
+        endAt: now,
+      })
+      .execute();
+    this.deleteInterval(String(reservationId));
+    return true;
+  }
 
   async create(dto: CreateReservationDto) {
     const reservation = new Reservation({

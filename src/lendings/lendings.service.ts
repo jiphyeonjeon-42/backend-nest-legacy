@@ -17,6 +17,7 @@ import {
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
+import { ReservationsService } from 'src/reservations/reservations.service';
 
 async function checkUser(
   lenidngsRepository: Repository<Lending>,
@@ -56,6 +57,7 @@ export class LendingsService {
     private readonly lendingsRepository: Repository<Lending>,
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private reservationsService: ReservationsService,
     private connection: Connection,
     private readonly slackbotService: SlackbotService,
     private readonly userService: UsersService,
@@ -72,6 +74,12 @@ export class LendingsService {
       // || !(await checkLibrarian(this.usersRepository, librarianId))
     )
       throw new BadRequestException('dto.userId || librarianId Error');
+
+    const reservationData = await this.reservationsService.getReservation(
+      dto.bookId,
+    );
+    if (reservationData != undefined && reservationData.user.id != dto.userId)
+      throw new BadRequestException('예약된 책입니다.');
     try {
       await this.lendingsRepository.insert({
         condition: dto.condition,
@@ -98,13 +106,17 @@ export class LendingsService {
     } catch (e) {
       throw new Error("lendings.service.create() catch'");
     }
+
+    if (reservationData != undefined)
+      await this.reservationsService.fetchEndAt(reservationData.id);
+
     return 'This action adds a new lending';
   }
 
   async findAll(
     options: IPaginationOptions,
     sort: string,
-    word?: string,
+    query?: string,
   ): Promise<Pagination<Lending>> {
     if (!(sort === 'new' || sort === 'older'))
       throw new BadRequestException('sort string Error');
@@ -113,18 +125,17 @@ export class LendingsService {
     let lendingData = this.lendingsRepository
       .createQueryBuilder('lending')
       .leftJoinAndSelect('lending.user', 'user')
-      .leftJoinAndSelect('lending.librarian', 'librarian')
       .leftJoinAndSelect('lending.book', 'book')
       .leftJoinAndSelect('book.info', 'info')
       .leftJoinAndSelect('lending.returning', 'returning')
       .where('returning.id is null');
-    if (Object.keys(word).length != 0) {
+    if (Object.keys(query).length != 0) {
       lendingData = lendingData
         .where('returning.id is null')
         .andWhere(
           '(info.title like :word or user.login like :word or book.callSign like :word)',
           {
-            word: `%${word['word']}%`,
+            word: `%${query['word']}%`,
           },
         );
     }
