@@ -1,0 +1,30 @@
+name: CD
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: create .env file 
+        run: |
+          cat $GITHUB_ENV > .env
+          cat .env
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: push codedeploy revision to s3
+        run: |
+          aws deploy push \
+            --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
+            --s3-location s3://${{ secrets.AWS_S3_BUCKET_NAME }}/${{ env.GITHUB_SHA }} \
+            --source .
