@@ -43,6 +43,8 @@ export class AuthController {
 
       res.cookie('access_token', jwtToken, {
         httpOnly: true,
+        secure: true,
+        sameSite: 'none',
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
       });
       return res
