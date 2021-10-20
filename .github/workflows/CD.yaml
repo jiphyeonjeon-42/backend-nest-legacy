@@ -1,0 +1,54 @@
+name: CD
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: create .env file
+        run: |
+          echo "AUTH_URL=${{ secrets.AUTH_URL }}
+          CALLBACK_URL=${{ secrets.CALLBACK_URL }}
+          CLIENT_ID=${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+          DATABASE_HOST=${{ secrets.DATABASE_HOST }}
+          DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+          DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_USER=${{ secrets.DATABASE_USER }}
+          ELASTICSEARCH_NODE=${{ secrets.ELASTICSEARCH_NODE }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          PORT=${{ secrets.PORT }}
+          REDIRECT_URL=${{ secrets.REDIRECT_URL }}" > .env
+ 
+      - name: install aws cli
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip -q awscliv2.zip 
+          sudo ./aws/install --update
+          rm -rf ./aws awscliv2.zip
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: push codedeploy revision to s3
+        run: aws deploy push
+          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }}
+          --s3-location s3://${{ secrets.AWS_S3_BUCKET_NAME }}/$GITHUB_SHA.zip
+          --source .
+      
+      - name: create deployments
+        run: aws deploy create-deployment
+          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }}
+          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }}
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --s3-location bucket=${{ secrets.AWS_S3_BUCKET_NAME }},key=$GITHUB_SHA.zip,bundleType=zip
