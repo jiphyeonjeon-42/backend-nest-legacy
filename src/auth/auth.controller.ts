@@ -5,6 +5,7 @@ import { Response } from 'express';
 import { FtAuthGuard } from './ft-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { ConfigService } from '@nestjs/config';
+import { NONAME } from 'dns';
 
 @Controller('auth')
 export class AuthController {
@@ -43,6 +44,8 @@ export class AuthController {
 
       res.cookie('access_token', jwtToken, {
         httpOnly: true,
+        secure: true,
+        sameSite: 'none',
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
       });
       return res
