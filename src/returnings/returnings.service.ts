@@ -7,13 +7,7 @@ import { ReservationsService } from 'src/reservations/reservations.service';
 import { SlackbotService } from 'src/slackbot/slackbot.service';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import {
-  Connection,
-  getConnection,
-  getRepository,
-  QueryBuilder,
-  Repository,
-} from 'typeorm';
+import { Connection, getConnection, Repository } from 'typeorm';
 import { CreateReturnDto } from './dto/create-returning.dto';
 import { Returning } from './entities/returning.entity';
 
@@ -40,7 +34,7 @@ export class ReturningsService {
     });
     try {
       await getConnection().transaction(async (manager) => {
-        returningData = await manager.recover(returning);
+        returningData = await manager.save(returning);
       });
     } catch (err) {
       throw new BadRequestException(err.sqlMessage);
