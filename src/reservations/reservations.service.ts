@@ -52,7 +52,6 @@ export class ReservationsService {
   }
 
   async getReservation(bookId: number): Promise<Reservation> | undefined {
-    const connection = getConnection();
     const reservationData = await this.reservationsRepository
       .createQueryBuilder('reservation')
       .leftJoinAndSelect('reservation.book', 'book')
