@@ -5,7 +5,6 @@ import { Response } from 'express';
 import { FtAuthGuard } from './ft-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { ConfigService } from '@nestjs/config';
-import { NONAME } from 'dns';
 
 @Controller('auth')
 export class AuthController {
