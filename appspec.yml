@@ -1,0 +1,10 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/backend
+hooks:
+  AfterInstall:
+    - location: deploy.sh
+      timeout: 1800
+      runas: ubuntu
