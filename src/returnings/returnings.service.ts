@@ -1,16 +1,13 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BooksService } from 'src/books/books.service';
 import { Lending } from 'src/lendings/entities/lending.entity';
 import { ReservationsService } from 'src/reservations/reservations.service';
+import { SlackbotService } from 'src/slackbot/slackbot.service';
 import { User } from 'src/users/entities/user.entity';
-import {
-  Connection,
-  getConnection,
-  getRepository,
-  QueryBuilder,
-  Repository,
-} from 'typeorm';
+import { UsersService } from 'src/users/users.service';
+import { Connection, getConnection, Repository } from 'typeorm';
 import { CreateReturnDto } from './dto/create-returning.dto';
 import { Returning } from './entities/returning.entity';
 
@@ -22,10 +19,12 @@ export class ReturningsService {
     private connection: Connection,
     private schedulerRegistry: SchedulerRegistry,
     private reservationsService: ReservationsService,
+    private readonly slackbotService: SlackbotService,
+    private readonly userService: UsersService,
+    private readonly booksService: BooksService,
   ) {}
 
   async create(dto: CreateReturnDto) {
-    let LendingData: Lending;
     let returningData: Returning;
     const returning = new Returning({
       condition: dto.condition,
@@ -35,13 +34,13 @@ export class ReturningsService {
     });
     try {
       await getConnection().transaction(async (manager) => {
-        returningData = await manager.recover(returning);
+        returningData = await manager.save(returning);
       });
     } catch (err) {
       throw new BadRequestException(err.sqlMessage);
     }
     const lendingsRepository = this.connection.getRepository(Lending);
-    LendingData = await lendingsRepository.findOne({
+    const LendingData = await lendingsRepository.findOne({
       relations: ['book'],
       where: returningData.lending,
     });
@@ -50,8 +49,18 @@ export class ReturningsService {
     const reservationData = await this.reservationsService.getReservation(
       bookId,
     );
-    if (reservationData != undefined)
+    if (reservationData != undefined) {
       await this.reservationsService.setEndAt(reservationData.id);
+      const findUser = await this.userService.findOne(reservationData.user.id);
+      const { title } = await this.booksService.findOne(bookId);
+      const message =
+        '📖 예약 알리미 📖\n' +
+        '`' +
+        title +
+        '`' +
+        '이 반납되었습니다. 3일 이내에 책을 대출해 주세요.';
+      this.slackbotService.publishMessage(findUser.slack, message);
+    }
   }
 
   async findAll() {
