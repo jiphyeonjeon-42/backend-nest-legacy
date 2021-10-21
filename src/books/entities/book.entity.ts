@@ -51,7 +51,12 @@ export class Book {
 
   @ManyToOne(() => BookInfo, (bookInfo) => bookInfo.books)
   @Expose({
-    groups: ['users.search', 'books.searchBook', 'reservations.search'],
+    groups: [
+      'users.search',
+      'books.searchBook',
+      'reservations.search',
+      'lendings.findOne',
+    ],
   })
   info: BookInfo;
 
