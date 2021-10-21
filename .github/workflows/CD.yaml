@@ -24,6 +24,7 @@ jobs:
           ELASTICSEARCH_NODE=${{ secrets.ELASTICSEARCH_NODE }}
           JWT_SECRET=${{ secrets.JWT_SECRET }}
           PORT=${{ secrets.PORT }}
+          BOT_USER_OAUTH_ACCESS_TOKEN=${{ secrets.BOT_USER_OAUTH_ACCESS_TOKEN }}
           REDIRECT_URL=${{ secrets.REDIRECT_URL }}" > .env
  
       - name: install aws cli
