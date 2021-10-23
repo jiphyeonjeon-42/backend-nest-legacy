@@ -32,7 +32,7 @@ export class BookInfo {
       'books.findOne',
       'books.findInfo',
       'books.searchBook',
-      'lendings.findAll',
+      'lendings.search',
       'lendings.findOne',
       'reservations.search',
     ],

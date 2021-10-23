@@ -113,7 +113,7 @@ export class LendingsService {
     return 'This action adds a new lending';
   }
 
-  async findAll(
+  async search(
     options: IPaginationOptions,
     sort: string,
     query?: string,
@@ -135,7 +135,7 @@ export class LendingsService {
         .andWhere(
           '(info.title like :word or user.login like :word or book.callSign like :word)',
           {
-            word: `%${query['word']}%`,
+            word: `%${query}%`,
           },
         );
     }
