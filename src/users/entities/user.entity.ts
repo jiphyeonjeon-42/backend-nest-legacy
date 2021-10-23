@@ -23,7 +23,7 @@ export class User {
 
   @Column()
   @Expose({
-    groups: ['lendings.findAll', 'lendings.findOne', 'reservations.search'],
+    groups: ['lendings.search', 'lendings.findOne', 'reservations.search'],
   })
   login: string;
 
@@ -76,7 +76,7 @@ export class User {
     return new Date() <= this.penaltyAt;
   }
 
-  @Expose({ groups: ['lendings.findAll', 'lendings.findOne'] })
+  @Expose({ groups: ['lendings.search', 'lendings.findOne'] })
   get penaltyDays() {
     const penalty = new Date(this.penaltyAt);
     const today = new Date();

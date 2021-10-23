@@ -33,16 +33,16 @@ export class LendingsController {
     return this.lendingsService.create(createLendingDto, librarianId);
   }
 
-  @SerializeOptions({ groups: ['lendings.findAll'] })
+  @SerializeOptions({ groups: ['lendings.search'] })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/search')
-  async findAll(
+  async search(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit = 5,
     @Query('sort') sort = 'new',
-    @Query() query?: string,
+    @Query('query') query = '',
   ): Promise<Pagination<Lending>> {
-    return this.lendingsService.findAll({ page, limit }, sort, query);
+    return this.lendingsService.search({ page, limit }, sort, query);
   }
 
   @SerializeOptions({ groups: ['lendings.findOne'] })

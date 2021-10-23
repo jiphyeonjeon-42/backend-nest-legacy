@@ -30,7 +30,7 @@ export class Book {
       'books.findOne',
       'books.searchBook',
       'lendings.findOne',
-      'lendings.findAll',
+      'lendings.search',
       'reservations.search',
     ],
   })
@@ -56,6 +56,7 @@ export class Book {
       'books.searchBook',
       'reservations.search',
       'lendings.findOne',
+      'lendings.search',
     ],
   })
   info: BookInfo;

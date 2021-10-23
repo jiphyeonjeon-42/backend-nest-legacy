@@ -23,7 +23,7 @@ export class Lending {
   id: number;
 
   @Column({ default: '' })
-  @Expose({ groups: ['lendings.findAll', 'lendings.findOne'] })
+  @Expose({ groups: ['lendings.search', 'lendings.findOne'] })
   condition: string;
 
   @CreateDateColumn()
@@ -34,7 +34,7 @@ export class Lending {
   @Expose({ groups: [] })
   updatedAt: Date;
 
-  @Expose({ groups: ['lendings.findAll', 'lendings.findOne'] })
+  @Expose({ groups: ['lendings.search', 'lendings.findOne'] })
   @ManyToOne(() => User, (user) => user.lendings)
   user: User;
 
@@ -42,7 +42,7 @@ export class Lending {
   @Expose({ groups: [] })
   librarian: User;
 
-  @Expose({ groups: ['lendings.findAll', 'lendings.findOne'] })
+  @Expose({ groups: ['lendings.search', 'lendings.findOne'] })
   @ManyToOne(() => Book, (book) => book.lendings)
   book: Book;
 
@@ -52,7 +52,7 @@ export class Lending {
 
   @Expose({
     name: 'dueDate',
-    groups: ['lendings.findAll', 'lendings.findOne', 'reservations.search'],
+    groups: ['lendings.search', 'lendings.findOne', 'reservations.search'],
   })
   getdueDate() {
     if (this.returning) throw new Error('lendings.service.find(All) catch');
