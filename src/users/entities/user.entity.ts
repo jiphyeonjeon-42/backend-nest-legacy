@@ -76,7 +76,9 @@ export class User {
     return new Date() <= this.penaltyAt;
   }
 
-  @Expose({ groups: ['lendings.search', 'lendings.findOne'] })
+  @Expose({
+    groups: ['lendings.search', 'lendings.findOne', 'reservations.search'],
+  })
   get penaltyDays() {
     const penalty = new Date(this.penaltyAt);
     const today = new Date();
