@@ -80,7 +80,7 @@ export class User {
   get penaltyDays() {
     const penalty = new Date(this.penaltyAt);
     const today = new Date();
-    if (penalty < today) return '-';
+    if (penalty < today) return 0;
     return Math.ceil(Math.abs(+penalty - +today) / (1000 * 3600 * 24));
   }
 }
