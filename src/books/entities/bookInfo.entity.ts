@@ -54,7 +54,14 @@ export class BookInfo {
   isbn: string;
 
   @Column()
-  @Expose({ groups: ['books.findOne', 'books.findInfo', 'lendings.findOne'] })
+  @Expose({
+    groups: [
+      'books.findOne',
+      'books.findInfo',
+      'lendings.findOne',
+      'reservations.search',
+    ],
+  })
   image: string;
 
   @Column({
