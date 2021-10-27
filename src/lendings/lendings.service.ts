@@ -80,6 +80,9 @@ export class LendingsService {
     );
     if (reservationData != undefined && reservationData.book.id != dto.bookId)
       throw new BadRequestException('예약된 책입니다.');
+    const lendingData = await this.getLending(dto.bookId);
+    if (!lendingData.returning)
+      throw new BadRequestException('대출된 책입니다.');
     try {
       await this.lendingsRepository.insert({
         condition: dto.condition,
@@ -160,6 +163,19 @@ export class LendingsService {
       where: { book: { id: bookId }, returning: { id: IsNull() } },
     });
     return findBook.length != 0;
+  }
+
+  async getLending(bookId: number): Promise<Lending> | undefined {
+    const lendingData = await this.lendingsRepository
+      .createQueryBuilder('lending')
+      .leftJoinAndSelect('lending.book', 'book')
+      .leftJoinAndSelect('lending.returning', 'returning')
+      .where('book.id=:bookId', { bookId: bookId })
+      .orderBy('lending.createdAt', 'DESC')
+      .getOne();
+
+    if (lendingData == undefined) return undefined;
+    return lendingData;
   }
 
   update(id: number, updateLendingDto: UpdateLendingDto) {
