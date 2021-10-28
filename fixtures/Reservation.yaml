@@ -2,9 +2,9 @@ entity: Reservation
 items:
   reservation1:
     user: '@user1'
-    book: '@book1_1'
+    book: '@bookA1'
     endAt: null
   reservation2:
     user: '@user2'
-    book: '@book2_1'
+    book: '@bookA2'
     endAt: null
