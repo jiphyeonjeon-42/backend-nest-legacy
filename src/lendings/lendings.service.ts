@@ -83,6 +83,8 @@ export class LendingsService {
     const lendingData = await this.getLending(dto.bookId);
     if (lendingData != undefined && !lendingData.returning)
       throw new BadRequestException('대출된 책입니다.');
+    const findUser = await this.userService.findOne(dto.userId);
+    const { title } = await this.booksService.findOne(dto.bookId);
     try {
       await this.lendingsRepository.insert({
         condition: dto.condition,
@@ -90,8 +92,6 @@ export class LendingsService {
         librarian: { id: librarianId },
         book: { id: dto.bookId },
       });
-      const findUser = await this.userService.findOne(dto.userId);
-      const { title } = await this.booksService.findOne(dto.bookId);
       const now = new Date();
       const limitDay = new Date(
         now.setDate(now.getDate() + 14),
