@@ -81,7 +81,9 @@ export class LendingsService {
     if (reservationData != undefined && reservationData.user.id != dto.userId)
       throw new BadRequestException('예약된 책입니다.');
     const lendingData = await this.getLending(dto.bookId);
-    if (!lendingData.returning)
+
+    if (lendingData == undefined) {
+    } else if (lendingData != undefined && !lendingData.returning)
       throw new BadRequestException('대출된 책입니다.');
     try {
       await this.lendingsRepository.insert({
@@ -173,8 +175,6 @@ export class LendingsService {
       .where('book.id=:bookId', { bookId: bookId })
       .orderBy('lending.createdAt', 'DESC')
       .getOne();
-
-    if (lendingData == undefined) return undefined;
     return lendingData;
   }
 
