@@ -11,7 +11,11 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.use(cookieParser());
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: [
+      'http://localhost:3000',
+      'http://dicemono.xyz',
+      'https://dicemono.xyz',
+    ],
     credentials: true,
   });
   await app.listen(port);

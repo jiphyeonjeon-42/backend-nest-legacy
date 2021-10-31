@@ -78,7 +78,7 @@ export class LendingsService {
     const reservationData = await this.reservationsService.getReservation(
       dto.bookId,
     );
-    if (reservationData != undefined && reservationData.user.id != dto.userId)
+    if (reservationData != undefined && reservationData.book.id != dto.bookId)
       throw new BadRequestException('예약된 책입니다.');
     const lendingData = await this.getLending(dto.bookId);
     if (lendingData != undefined && !lendingData.returning)
@@ -107,7 +107,7 @@ export class LendingsService {
         '까지 반납해주세요.';
       this.slackbotService.publishMessage(findUser.slack, message);
     } catch (e) {
-      throw new Error("lendings.service.create() catch'");
+      throw new BadRequestException("lendings.service.create() catch'");
     }
 
     if (reservationData != undefined)
