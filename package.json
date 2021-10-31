@@ -42,7 +42,6 @@
     "cookie-parser": "^1.4.5",
     "cross-env": "^7.0.3",
     "fastify-cookie": "^5.3.1",
-    "joi": "^17.4.2",
     "logger": "0.0.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
