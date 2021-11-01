@@ -35,7 +35,7 @@ export class Lending {
   updatedAt: Date;
 
   @Expose({ groups: ['lendings.search', 'lendings.findOne'] })
-  @ManyToOne(() => User, (user) => user.lendings)
+  @ManyToOne(() => User, (user) => user.lendings, { nullable: false })
   user: User;
 
   @ManyToOne(() => User, (librarian) => librarian.librarianLendings)
@@ -43,7 +43,7 @@ export class Lending {
   librarian: User;
 
   @Expose({ groups: ['lendings.search', 'lendings.findOne'] })
-  @ManyToOne(() => Book, (book) => book.lendings)
+  @ManyToOne(() => Book, (book) => book.lendings, { nullable: false })
   book: Book;
 
   @OneToOne(() => Returning, (returning) => returning.lending)
