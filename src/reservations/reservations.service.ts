@@ -187,17 +187,17 @@ export class ReservationsService {
     return count;
   }
 
-  async search(options: IPaginationOptions, query: string, filters: string[]) {
+  async search(options: IPaginationOptions, query: string, filter: string[]) {
     let queryBuilder = this.reservationsRepository
       .createQueryBuilder('reservation')
       .leftJoinAndSelect('reservation.user', 'user')
       .leftJoinAndSelect('reservation.book', 'book')
       .leftJoinAndSelect('book.info', 'info')
       .leftJoinAndSelect('book.lendings', 'lendings');
-    if (!filters.includes('proceeding') && !filters.includes('finish')) {
+    if (!filter.includes('proceeding') && !filter.includes('finish')) {
       // 둘다 선택안했을 때
-      queryBuilder = queryBuilder.where('id IS NULL'); //다시 확인
-    } else if (filters.includes('proceeding') && !filters.includes('finish')) {
+      queryBuilder = queryBuilder.where('reservation.id IS NULL'); //다시 확인
+    } else if (filter.includes('proceeding') && !filter.includes('finish')) {
       // proceeding
       queryBuilder = queryBuilder
         .where('reservation.endAt >= :current_date', {
@@ -205,7 +205,7 @@ export class ReservationsService {
         })
         .orWhere('reservation.endAt IS NULL')
         .andWhere('reservation.canceledAt IS NULL');
-    } else if (filters.includes('finish') && !filters.includes('proceeding')) {
+    } else if (filter.includes('finish') && !filter.includes('proceeding')) {
       // finish
       queryBuilder = queryBuilder
         .where('reservation.canceledAt IS NOT NULL')
@@ -213,7 +213,7 @@ export class ReservationsService {
           current_date: new Date(),
         });
     }
-    queryBuilder = queryBuilder.where(
+    queryBuilder = queryBuilder.andWhere(
       '(user.login like :query or info.title like :query)',
       {
         query: `%${query}%`,
