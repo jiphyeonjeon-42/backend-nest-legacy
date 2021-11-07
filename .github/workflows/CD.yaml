@@ -13,7 +13,8 @@ jobs:
 
       - name: create .env file
         run: |
-          echo "AUTH_URL=${{ secrets.AUTH_URL }}
+          echo "TZ=Asia/Seoul
+          AUTH_URL=${{ secrets.AUTH_URL }}
           CALLBACK_URL=${{ secrets.CALLBACK_URL }}
           CLIENT_ID=${{ secrets.CLIENT_ID }}
           CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
