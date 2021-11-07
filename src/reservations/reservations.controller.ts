@@ -44,6 +44,7 @@ export class ReservationsController {
   ) {
     const { id } = req.user;
     dto.userId = id;
+
     // lending check
     const lendingCheck = await this.lendingsService.isLentBook(dto.bookId);
     if (!lendingCheck) {
