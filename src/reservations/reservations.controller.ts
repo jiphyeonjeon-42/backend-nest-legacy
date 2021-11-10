@@ -45,7 +45,7 @@ export class ReservationsController {
     const { id } = req.user;
     dto.userId = id;
 
-    // lending check
+    //lending check
     const lendingCheck = await this.lendingsService.isLentBook(dto.bookId);
     if (!lendingCheck) {
       throw new BadRequestException({
@@ -86,14 +86,10 @@ export class ReservationsController {
     if (bookCount === 1) {
       lenderableInfo = await this.lendingsService.getLending(dto.bookId);
       date = lenderableInfo.createdAt;
-      const _lenderableDate: Date = new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate() + 14,
-        18,
-        0,
-        0,
-      );
+      console.log(date);
+      const _lenderableDate = new Date(date);
+      _lenderableDate.setDate(date.getDate() + 14);
+
       return {
         count: bookCount,
         lenderableDate: _lenderableDate,
