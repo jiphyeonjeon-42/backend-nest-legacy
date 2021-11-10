@@ -5,13 +5,13 @@ import {
   Body,
   Param,
   Delete,
-  ValidationPipe,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { ReturningsService } from './returnings.service';
 import { CreateReturnDto } from './dto/create-returning.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { CodeValidationPipe } from 'src/code-validation.pipe';
 
 @Controller('returnings')
 export class ReturningsController {
@@ -21,7 +21,7 @@ export class ReturningsController {
   @Post()
   async create(
     @Req() req,
-    @Body(new ValidationPipe()) createReturnDto: CreateReturnDto,
+    @Body(new CodeValidationPipe()) createReturnDto: CreateReturnDto,
   ) {
     createReturnDto.librarianId = req.user.id;
     return this.returningsService.create(createReturnDto);

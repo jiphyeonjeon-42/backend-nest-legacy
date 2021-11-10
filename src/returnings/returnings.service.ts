@@ -37,7 +37,9 @@ export class ReturningsService {
         returningData = await manager.save(returning);
       });
     } catch (err) {
-      throw new BadRequestException(err.sqlMessage);
+      throw new BadRequestException({
+        errorCode: 2,
+      });
     }
     const lendingsRepository = this.connection.getRepository(Lending);
     const LendingData = await lendingsRepository.findOne({

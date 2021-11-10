@@ -127,7 +127,9 @@ export class ReservationsService {
         await manager.save(reservation);
       });
     } catch (err) {
-      throw new BadRequestException(err.sqlMessage);
+      throw new BadRequestException({
+        errorCode: 5,
+      });
     }
   }
 
