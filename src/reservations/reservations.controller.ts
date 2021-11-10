@@ -45,27 +45,27 @@ export class ReservationsController {
     const { id } = req.user;
     dto.userId = id;
 
-    // lending check
-    // const lendingCheck = await this.lendingsService.isLentBook(dto.bookId);
-    // if (!lendingCheck) {
-    //   throw new BadRequestException('대출 되지 않은 책입니다.');
-    // }
+    //lending check
+    const lendingCheck = await this.lendingsService.isLentBook(dto.bookId);
+    if (!lendingCheck) {
+      throw new BadRequestException('대출 되지 않은 책입니다.');
+    }
 
-    // //reservation count check
-    // const reservationBookCheck =
-    //   await this.reservationsService.reservationBookCheck(dto);
-    // if (reservationBookCheck) {
-    //   throw new BadRequestException('예약하신 책입니다.');
-    // }
-    // const userCount = await this.reservationsService.userCnt(dto.userId);
-    // if (userCount >= 2) {
-    //   throw new BadRequestException(
-    //     '집현전의 도서는 2권까지 예약할 수 있습니다.',
-    //   );
-    //}
+    //reservation count check
+    const reservationBookCheck =
+      await this.reservationsService.reservationBookCheck(dto);
+    if (reservationBookCheck) {
+      throw new BadRequestException('예약하신 책입니다.');
+    }
+    const userCount = await this.reservationsService.userCnt(dto.userId);
+    if (userCount >= 2) {
+      throw new BadRequestException(
+        '집현전의 도서는 2권까지 예약할 수 있습니다.',
+      );
+    }
 
     //create reservation
-    //await this.reservationsService.create(dto);
+    await this.reservationsService.create(dto);
 
     //slack message send.
     const findUser = await this.userService.findOne(dto.userId);
@@ -73,7 +73,7 @@ export class ReservationsController {
     const message =
       '📖 예약 알리미 📖\n' + '`' + title + '`' + '이 예약되었습니다.';
     const bookCount = await this.reservationsService.bookCnt(dto.bookId);
-    //this.slackbotService.publishMessage(findUser.slack, message);
+    this.slackbotService.publishMessage(findUser.slack, message);
     let lenderableInfo: Lending;
     let date: Date;
     if (bookCount === 1) {
