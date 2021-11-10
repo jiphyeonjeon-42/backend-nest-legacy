@@ -71,23 +71,25 @@ export class Book {
 
   @Expose({ name: 'dueDate', groups: ['books.findOne'] })
   getDueDate() {
-    if (this.lendings.length == 0) return '-';
-    for (const lending of this.lendings) {
-      if (lending.returning) {
-        return '-';
-      } else {
-        const tDate = new Date(lending['createdAt']);
-        tDate.setDate(tDate.getDate() + 14);
-        return tDate.toJSON().substring(2, 10).split('-').join('.');
-      }
+    if (this.lendings && this.lendings.length == 0) return '-';
+    const lastLending = this.lendings.sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+    )[0];
+    if (lastLending.returning) {
+      return '-';
+    } else {
+      const tDate = new Date(lastLending['createdAt']);
+      tDate.setDate(tDate.getDate() + 14);
+      return tDate.toJSON().substring(2, 10).split('-').join('.');
     }
   }
 
   @Expose({ name: 'status', groups: ['books.findOne'] })
   getStatus() {
-    if (this.status == 1) return '비치중';
-    else if (this.status == 2) return '대출중';
-    else if (this.status == 3) return '분실';
-    else if (this.status == 4) return '파손';
+    if (this.status == 0) {
+      if (this.getDueDate() !== '-') return '대출 중';
+      return '비치 중';
+    } else if (this.status == 1) return '분실';
+    else if (this.status == 2) return '파손';
   }
 }
