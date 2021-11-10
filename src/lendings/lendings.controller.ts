@@ -14,6 +14,7 @@ import {
   SerializeOptions,
   DefaultValuePipe,
   ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { LendingsService } from './lendings.service';
@@ -28,9 +29,13 @@ export class LendingsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Req() req, @Body() createLendingDto: CreateLendingDto) {
+  async create(
+    @Req() req,
+    @Body(new ValidationPipe()) createLendingDtos: CreateLendingDto[],
+  ) {
     const librarianId = req.user.id;
-    return this.lendingsService.create(createLendingDto, librarianId);
+    for (const dto of createLendingDtos)
+      await this.lendingsService.create(dto, librarianId);
   }
 
   @SerializeOptions({ groups: ['lendings.search'] })

@@ -1,12 +1,12 @@
 entity: Book
 items:
-  book1_1:  
-    info: '@book_info1'
-    donator: 'doby'
+  bookA{1..432}:  
+    info: '@book_info($current)'
+    donator: 'marvin'
     callSign: '($current)ABC'
-    status: 1
-  book2_1:  
-    info: '@book_info1'
-    donator: 'doby'
+    status: 0
+  bookB{1..432}:  
+    info: '@book_info($current)'
+    donator: 'marvin'
     callSign: '($current)ABC'
-    status: 1
+    status: 0
