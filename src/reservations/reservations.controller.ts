@@ -101,12 +101,12 @@ export class ReservationsController {
   async search(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit = 5,
-    @Query('filters', new DefaultValuePipe([]), ParseArrayPipe)
-    filters: string[] = [],
+    @Query('filter', new DefaultValuePipe([]), ParseArrayPipe)
+    filter: string[] = [],
     @Query('query') query = '',
   ) {
     try {
-      return this.reservationsService.search({ page, limit }, query, filters);
+      return this.reservationsService.search({ page, limit }, query, filter);
     } catch (error) {
       return error;
     }
