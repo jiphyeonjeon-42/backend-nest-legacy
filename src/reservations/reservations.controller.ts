@@ -6,7 +6,6 @@ import {
   Delete,
   UseGuards,
   Req,
-  ValidationPipe,
   Body,
   BadRequestException,
   DefaultValuePipe,
@@ -24,6 +23,7 @@ import { SlackbotService } from 'src/slackbot/slackbot.service';
 import { UsersService } from 'src/users/users.service';
 import { BooksService } from 'src/books/books.service';
 import { LendingsService } from 'src/lendings/lendings.service';
+import { CodeValidationPipe } from 'src/code-validation.pipe';
 import { Lending } from 'src/lendings/entities/lending.entity';
 
 @Controller('reservations')
@@ -40,7 +40,7 @@ export class ReservationsController {
   @Post()
   async create(
     @Req() req,
-    @Body(new ValidationPipe()) dto: CreateReservationDto,
+    @Body(new CodeValidationPipe()) dto: CreateReservationDto,
   ) {
     const { id } = req.user;
     dto.userId = id;
@@ -48,20 +48,27 @@ export class ReservationsController {
     // lending check
     const lendingCheck = await this.lendingsService.isLentBook(dto.bookId);
     if (!lendingCheck) {
-      throw new BadRequestException('대출 되지 않은 책입니다.');
+      throw new BadRequestException({
+        errorCode: 2,
+        message: ['대출 되지 않은 책입니다.'],
+      });
     }
 
     //reservation count check
     const reservationBookCheck =
       await this.reservationsService.reservationBookCheck(dto);
     if (reservationBookCheck) {
-      throw new BadRequestException('예약하신 책입니다.');
+      throw new BadRequestException({
+        errorCode: 3,
+        message: ['예약된 책입니다.'],
+      });
     }
     const userCount = await this.reservationsService.userCnt(dto.userId);
     if (userCount >= 2) {
-      throw new BadRequestException(
-        '집현전의 도서는 2권까지 예약할 수 있습니다.',
-      );
+      throw new BadRequestException({
+        errorCode: 4,
+        message: ['예약한 책이 2권 초과되었습니다.'],
+      });
     }
 
     //create reservation
