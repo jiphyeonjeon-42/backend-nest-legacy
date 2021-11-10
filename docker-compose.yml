@@ -6,6 +6,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-1234}
       MYSQL_DATABASE: "jiphyeonjeon"
+      TZ: "Asia/Seoul"
   backend:
     build: .
     command: "npm run start:prod"

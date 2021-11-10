@@ -36,7 +36,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
-        timezone: 'Asia/Seoul',
+        timezone: 'Z',
         host: configService.get('database.host'),
         port: configService.get('database.port'),
         username: configService.get('database.username'),
