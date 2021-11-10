@@ -58,6 +58,7 @@ export class BookInfo {
     groups: [
       'books.findOne',
       'books.findInfo',
+      'books.searchBook',
       'lendings.findOne',
       'reservations.search',
     ],
