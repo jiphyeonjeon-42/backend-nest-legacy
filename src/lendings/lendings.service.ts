@@ -18,6 +18,7 @@ import {
   Pagination,
 } from 'nestjs-typeorm-paginate';
 import { ReservationsService } from 'src/reservations/reservations.service';
+import { CreateReservationDto } from 'src/reservations/dto/create-reservation.dto';
 
 async function checkUser(
   lenidngsRepository: Repository<Lending>,
@@ -36,6 +37,7 @@ async function checkUser(
     .where('returning.id is null')
     .andWhere('user.id=:userId', { userId: userId })
     .getCount();
+  console.log(lendingCnt);
   if (2 <= lendingCnt || today <= penalty) return 0;
   return 1;
 }
@@ -171,6 +173,24 @@ export class LendingsService {
       where: { book: { id: bookId }, returning: { id: IsNull() } },
     });
     return findBook.length != 0;
+  }
+
+  async isLentUser(dto: CreateReservationDto) {
+    const findUser = await this.lendingsRepository.find({
+      relations: ['returning', 'user'],
+      where: [
+        {
+          book: { id: dto.bookId },
+          returning: { id: IsNull() },
+        },
+        {
+          user: { id: dto.userId },
+          returning: { id: IsNull() },
+        },
+      ],
+    });
+    if (findUser[0].user.id === dto.userId) return 1;
+    return 0;
   }
 
   async getLending(bookId: number): Promise<Lending> | undefined {
