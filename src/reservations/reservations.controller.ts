@@ -24,6 +24,7 @@ import { SlackbotService } from 'src/slackbot/slackbot.service';
 import { UsersService } from 'src/users/users.service';
 import { BooksService } from 'src/books/books.service';
 import { LendingsService } from 'src/lendings/lendings.service';
+import { Lending } from 'src/lendings/entities/lending.entity';
 
 @Controller('reservations')
 export class ReservationsController {
@@ -43,9 +44,9 @@ export class ReservationsController {
   ) {
     const { id } = req.user;
     dto.userId = id;
+
     // lending check
     const lendingCheck = await this.lendingsService.isLentBook(dto.bookId);
-    console.log(lendingCheck);
     if (!lendingCheck) {
       throw new BadRequestException('대출 되지 않은 책입니다.');
     }
@@ -73,7 +74,24 @@ export class ReservationsController {
       '📖 예약 알리미 📖\n' + '`' + title + '`' + '이 예약되었습니다.';
     const bookCount = await this.reservationsService.bookCnt(dto.bookId);
     this.slackbotService.publishMessage(findUser.slack, message);
-    return { count: bookCount };
+    let lenderableInfo: Lending;
+    let date: Date;
+    if (bookCount === 1) {
+      lenderableInfo = await this.lendingsService.getLending(dto.bookId);
+      date = lenderableInfo.createdAt;
+      const _lenderableDate: Date = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate() + 14,
+        18,
+        0,
+        0,
+      );
+      return {
+        count: bookCount,
+        lenderableDate: _lenderableDate,
+      };
+    } else return { count: bookCount, lenderableDate: null };
   }
 
   @UseGuards(JwtAuthGuard)
