@@ -14,7 +14,6 @@ import {
   SerializeOptions,
   DefaultValuePipe,
   ParseIntPipe,
-  ValidationPipe,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { LendingsService } from './lendings.service';
@@ -22,6 +21,7 @@ import { UpdateLendingDto } from './dto/update-lending.dto';
 import { Lending } from './entities/lending.entity';
 import { CreateLendingDto } from './dto/create-lending.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
+import { CodeValidationPipe } from 'src/code-validation.pipe';
 
 @Controller('lendings')
 export class LendingsController {
@@ -31,7 +31,7 @@ export class LendingsController {
   @Post()
   async create(
     @Req() req,
-    @Body(new ValidationPipe()) createLendingDtos: CreateLendingDto[],
+    @Body(new CodeValidationPipe()) createLendingDtos: CreateLendingDto[],
   ) {
     const librarianId = req.user.id;
     for (const dto of createLendingDtos)

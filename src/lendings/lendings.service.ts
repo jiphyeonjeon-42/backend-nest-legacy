@@ -73,16 +73,25 @@ export class LendingsService {
       ))
       // || !(await checkLibrarian(this.usersRepository, librarianId))
     )
-      throw new BadRequestException('dto.userId || librarianId Error');
+      throw new BadRequestException({
+        errorCode: 2,
+        message: ['책을 빌릴 수 없는 유저입니다.'],
+      });
 
     const reservationData = await this.reservationsService.getReservation(
       dto.bookId,
     );
     if (reservationData != undefined && reservationData.book.id != dto.bookId)
-      throw new BadRequestException('예약된 책입니다.');
+      throw new BadRequestException({
+        errorCode: 3,
+        message: ['예약된 책입니다.'],
+      });
     const lendingData = await this.getLending(dto.bookId);
     if (lendingData != undefined && !lendingData.returning)
-      throw new BadRequestException('대출된 책입니다.');
+      throw new BadRequestException({
+        errorCode: 4,
+        message: ['이미 대출된 책입니다.'],
+      });
     try {
       await this.lendingsRepository.insert({
         condition: dto.condition,
@@ -107,13 +116,14 @@ export class LendingsService {
         '까지 반납해주세요.';
       this.slackbotService.publishMessage(findUser.slack, message);
     } catch (e) {
-      throw new BadRequestException('lendings.service.create() catch');
+      throw new BadRequestException({
+        errorCode: 5,
+        message: ['db 에러'],
+      });
     }
 
     if (reservationData != undefined)
       await this.reservationsService.fetchEndAt(reservationData.id);
-
-    return 'This action adds a new lending';
   }
 
   async search(
@@ -121,8 +131,6 @@ export class LendingsService {
     sort: string,
     query?: string,
   ): Promise<Pagination<Lending>> {
-    if (!(sort === 'new' || sort === 'older'))
-      throw new BadRequestException('sort string Error');
     let standard = false;
     if (sort != 'new') standard = true;
     let lendingData = this.lendingsRepository
