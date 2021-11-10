@@ -45,12 +45,21 @@ export class ReservationsController {
     const { id } = req.user;
     dto.userId = id;
 
-    //lending check
-    const lendingCheck = await this.lendingsService.isLentBook(dto.bookId);
-    if (!lendingCheck) {
+    //lending book check
+    const lendingBookCheck = await this.lendingsService.isLentBook(dto.bookId);
+    if (!lendingBookCheck) {
       throw new BadRequestException({
         errorCode: 2,
         message: ['대출 되지 않은 책입니다.'],
+      });
+    }
+
+    //lending user check
+    const lendingUserCheck = await this.lendingsService.isLentUser(dto);
+    if (lendingUserCheck) {
+      throw new BadRequestException({
+        errorCode: 6,
+        message: ['본인이 대출한 책은 다시 예약할 수 없습니다.'],
       });
     }
 
@@ -60,7 +69,7 @@ export class ReservationsController {
     if (reservationBookCheck) {
       throw new BadRequestException({
         errorCode: 3,
-        message: ['예약된 책입니다.'],
+        message: ['이미 예약된 책입니다.'],
       });
     }
     const userCount = await this.reservationsService.userCnt(dto.userId);
