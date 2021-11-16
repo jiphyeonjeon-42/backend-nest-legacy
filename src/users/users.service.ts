@@ -34,6 +34,13 @@ export class UsersService {
     return existingUser;
   }
 
+  async userFind(userId: string): Promise<User> {
+    const existingUser = await this.userRepository.findOne({
+      where: { login: userId },
+    });
+    return existingUser;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async create() {
     return 'This action adds a new user';
