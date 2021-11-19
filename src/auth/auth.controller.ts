@@ -35,7 +35,7 @@ export class AuthController {
         login,
         image: image_url,
       };
-      let user = await this.userService.userSearch(ftUserInfo);
+      let user = await this.userService.userFind(ftUserInfo.login);
       if (!user) {
         user = await this.userService.userSave(ftUserInfo);
       }

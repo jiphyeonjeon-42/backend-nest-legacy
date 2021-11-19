@@ -27,12 +27,12 @@ export class UsersService {
     return this.userRepository.save(createdUser);
   }
 
-  async userSearch(user: ftTypes): Promise<User> {
-    const existingUser = await this.userRepository.findOne({
-      where: { intra: user.intra },
-    });
-    return existingUser;
-  }
+  // async userSearch(user: ftTypes): Promise<User> {
+  //   const existingUser = await this.userRepository.findOne({
+  //     where: { intra: user.intra },
+  //   });
+  //   return existingUser;
+  // }
 
   async userFind(userId: string): Promise<User> {
     const existingUser = await this.userRepository.findOne({

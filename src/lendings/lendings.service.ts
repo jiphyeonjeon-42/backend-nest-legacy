@@ -176,20 +176,14 @@ export class LendingsService {
   }
 
   async isLentUser(dto: CreateReservationDto) {
-    const findUser = await this.lendingsRepository.find({
+    const lending = await this.lendingsRepository.find({
       relations: ['returning', 'user'],
-      where: [
-        {
-          book: { id: dto.bookId },
-          returning: { id: IsNull() },
-        },
-        {
-          user: { id: dto.userId },
-          returning: { id: IsNull() },
-        },
-      ],
+      where: {
+        book: { id: dto.bookId },
+        returning: { id: IsNull() },
+      },
     });
-    if (findUser[0].user.id === dto.userId) return 1;
+    if (lending[0].user.id === dto.userId) return 1;
     return 0;
   }
 
