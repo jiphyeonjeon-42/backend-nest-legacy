@@ -50,4 +50,20 @@ export class Reservation {
   getLenderableDate() {
     return this.book.getDueDate();
   }
+
+  @Expose({ name: 'endAt', groups: ['users.search'] })
+  getEndAt() {
+    if (!this.endAt) {
+      return '-';
+    }
+    return this.endAt.toJSON().substring(2, 10).split('-').join('.') + '.';
+  }
+
+  @Expose({ name: 'rank', groups: ['users.search'] })
+  getRank() {
+    if (!this.endAt) {
+      return null;
+    }
+    return 1;
+  }
 }

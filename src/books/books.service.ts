@@ -61,7 +61,6 @@ export class BooksService {
       .orWhere('info.title like :query', { query: `%${query}%` })
       .orWhere('info.author like :query', { query: `%${query}%` })
       .orWhere('info.isbn like :query', { query: `%${query}%` });
-    console.log(options);
     return paginate(queryBuilder, options);
   }
 
