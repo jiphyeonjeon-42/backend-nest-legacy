@@ -26,11 +26,11 @@ export class Lending {
   @Expose({ groups: ['lendings.search', 'lendings.findOne'] })
   condition: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   @Expose({ groups: ['lendings.findOne'] })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   @Expose({ groups: [] })
   updatedAt: Date;
 

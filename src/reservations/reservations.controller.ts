@@ -91,17 +91,13 @@ export class ReservationsController {
     const bookCount = await this.reservationsService.bookCnt(dto.bookId);
     this.slackbotService.publishMessage(findUser.slack, message);
     let lenderableInfo: Lending;
-    let date: Date;
     if (bookCount === 1) {
       lenderableInfo = await this.lendingsService.getLending(dto.bookId);
-      date = lenderableInfo.createdAt;
-      console.log(date);
-      const _lenderableDate = new Date(date);
-      _lenderableDate.setDate(date.getDate() + 14);
-
+      const date = new Date(lenderableInfo.createdAt);
+      date.setDate(date.getDate() + 14);
       return {
         count: bookCount,
-        lenderableDate: _lenderableDate,
+        lenderableDate: date.toLocaleString('ko', { timeZone: 'Asia/Seoul' }),
       };
     } else return { count: bookCount, lenderableDate: null };
   }
