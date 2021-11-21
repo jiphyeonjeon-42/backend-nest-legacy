@@ -42,17 +42,22 @@ export class Lending {
   @Expose({ groups: [] })
   librarian: User;
 
-  @Expose({ groups: ['lendings.search', 'lendings.findOne'] })
+  @Expose({ groups: ['lendings.search', 'lendings.findOne', 'users.search'] })
   @ManyToOne(() => Book, (book) => book.lendings, { nullable: false })
   book: Book;
 
   @OneToOne(() => Returning, (returning) => returning.lending)
-  @Expose({ groups: [] })
+  @Expose({ groups: ['users.search'] })
   returning: Returning;
 
   @Expose({
     name: 'dueDate',
-    groups: ['lendings.search', 'lendings.findOne', 'reservations.search'],
+    groups: [
+      'lendings.search',
+      'lendings.findOne',
+      'reservations.search',
+      'users.search',
+    ],
   })
   getdueDate() {
     if (this.returning) throw new Error('lendings.service.find(All) catch');

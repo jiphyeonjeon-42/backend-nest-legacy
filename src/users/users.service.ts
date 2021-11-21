@@ -46,6 +46,25 @@ export class UsersService {
   async searchByLogin(login: string, options: IPaginationOptions) {
     const queryBuilder = await this.userRepository
       .createQueryBuilder('user')
+      .leftJoinAndSelect(
+        'user.reservations',
+        'reservations',
+        'reservations.canceledAt IS NULL AND (reservations.endAt IS NULL OR reservations.endAt >= :current)',
+        { current: new Date() },
+      )
+      .leftJoinAndSelect('reservations.book', 'reservationsBook')
+      .leftJoinAndSelect('reservationsBook.info', 'reservationsBookInfo')
+      .leftJoinAndSelect(
+        'reservationsBook.lendings',
+        'reservationsBookLendings',
+      )
+      .leftJoinAndSelect(
+        'user.lendings',
+        'lendings',
+        'NOT EXISTS(SELECT * FROM returning where returning.lendingId = lendings.id)',
+      )
+      .leftJoinAndSelect('lendings.book', 'lendingsBook')
+      .leftJoinAndSelect('lendingsBook.info', 'lendingsBookInfo')
       .where('user.login like :login', { login: `%${login}%` });
     return paginate(queryBuilder, options);
   }

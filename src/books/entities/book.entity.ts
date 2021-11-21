@@ -92,4 +92,13 @@ export class Book {
     } else if (this.status == 1) return '분실';
     else if (this.status == 2) return '파손';
   }
+
+  @Expose({ groups: ['books.searchBook'] })
+  get isLenderable() {
+    if (!this.lendings || this.lendings.length == 0) return true;
+    const lastLending = this.lendings.sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+    )[0];
+    return !!lastLending.returning;
+  }
 }

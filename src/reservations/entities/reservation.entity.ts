@@ -21,7 +21,7 @@ export class Reservation {
   @Column({
     nullable: true,
   })
-  @Expose({ groups: ['reservations.search'] })
+  @Expose({ groups: ['reservations.search', 'users.search'] })
   endAt: Date;
 
   @CreateDateColumn()
@@ -43,6 +43,11 @@ export class Reservation {
   user: User;
 
   @ManyToOne(() => Book, (book) => book.reservations)
-  @Expose({ groups: ['reservations.search'] })
+  @Expose({ groups: ['reservations.search', 'users.search'] })
   book: Book;
+
+  @Expose({ name: 'lenderableDate', groups: ['users.search'] })
+  getLenderableDate() {
+    return this.book.getDueDate();
+  }
 }
