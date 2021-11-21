@@ -35,7 +35,7 @@ export class AuthController {
         login,
         image: image_url,
       };
-      let user = await this.userService.userSearch(ftUserInfo);
+      let user = await this.userService.userFind(ftUserInfo.login);
       if (!user) {
         user = await this.userService.userSave(ftUserInfo);
       }
@@ -45,7 +45,7 @@ export class AuthController {
         httpOnly: true,
         secure: true,
         sameSite: 'none',
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        expires: new Date(Date.now() + 15 * 1000 * 60 * 60 * 24),
       });
       return res
         .status(302)

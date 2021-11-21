@@ -12,12 +12,13 @@ import { ReturningsService } from './returnings.service';
 import { CreateReturnDto } from './dto/create-returning.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CodeValidationPipe } from 'src/code-validation.pipe';
+import { RolesGuard } from 'src/auth/roles.guard';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('returnings')
 export class ReturningsController {
   constructor(private readonly returningsService: ReturningsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   async create(
     @Req() req,

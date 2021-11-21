@@ -22,12 +22,20 @@ import { Lending } from './entities/lending.entity';
 import { CreateLendingDto } from './dto/create-lending.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { CodeValidationPipe } from 'src/code-validation.pipe';
+import { Roles } from 'src/auth/roles.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
 
 @Controller('lendings')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class LendingsController {
   constructor(private readonly lendingsService: LendingsService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @Get()
+  //@Roles('admin')
+  async mainpage() {
+    return 'hello!';
+  }
+
   @Post()
   async create(
     @Req() req,
