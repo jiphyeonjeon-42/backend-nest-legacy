@@ -4,42 +4,49 @@ items:
     login: hyekim
     intra: 1
     slack: hyekim
-    lendingCnt: 0
-    reservationCnt: 0
     librarian: true
   librarian2:
     login: chanykim
     intra: 2
     slack: chanykim
-    lendingCnt: 0
-    reservationCnt: 0
     librarian: true
   librarian3:
     login: minkykim
     intra: 3
     slack: minkykim
-    lendingCnt: 0
-    reservationCnt: 0
     librarian: true
-  user1:
+  librarian4:
     login: jwoo
     intra: 4
     slack: jwoo
-    lendingCnt: 0
-    reservationCnt: 0
-    librarian: false
-  user2:
+    librarian: true
+  librarian5:
     login: sujikim
     intra: 5
     slack: sujikim
-    lendingCnt: 0
-    reservationCnt: 0
-    librarian: false
-  user3:
+    librarian: true
+  librarian6:
     login: tkim
     intra: 6
     slack: tkim
-    lendingCnt: 0
-    reservationCnt: 0
-    librarian: false
-
+    librarian: true
+  librarian7:
+    login: gilee
+    intra: 7
+    slack: gilee
+    librarian: true
+  librarian8:
+    login: youkim
+    intra: 8
+    slack: youkim
+    librarian: true
+  librarian9:
+    login: samin
+    intra: 9
+    slack: samin
+    librarian: true
+  librarian10:
+    login: jolim
+    intra: 10
+    slack: samin
+    librarian: true
