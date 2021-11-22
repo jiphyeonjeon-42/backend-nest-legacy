@@ -73,7 +73,8 @@ export class Book {
   getDueDate() {
     if (this.lendings && this.lendings.length == 0) return '-';
     const lastLending = this.lendings.sort(
-      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     )[0];
     if (lastLending.returning) {
       return '-';
@@ -97,7 +98,8 @@ export class Book {
   get isLenderable() {
     if (!this.lendings || this.lendings.length == 0) return true;
     const lastLending = this.lendings.sort(
-      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     )[0];
     return !!lastLending.returning;
   }
