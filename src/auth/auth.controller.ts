@@ -70,16 +70,13 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('logout')
+  @Post('logout')
   async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
-    //res.clearCookie('access_token');
     res.cookie('access_token', null, {
       maxAge: 0,
       httpOnly: true,
     });
     res.status(204);
-    //res.redirect('/');
-    //res.status(302).redirect('http://localhost:80');
   }
 }
 
