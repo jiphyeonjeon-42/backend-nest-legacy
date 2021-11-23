@@ -10,5 +10,10 @@ items:
     librarian: '@librarian{1..3}'
     book: '@bookA2'
     condition: '문제 없음'
+  lending3:
+    user: '@librarian6'
+    librarian: '@librarian{1..3}'
+    book: '@bookA3'
+    condition: '문제 없음'
 
     

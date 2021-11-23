@@ -6,5 +6,5 @@ items:
     endAt: null
   reservation2:
     user: '@librarian5'
-    book: '@bookA2'
+    book: '@bookA3'
     endAt: null
