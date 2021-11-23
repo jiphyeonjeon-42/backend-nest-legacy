@@ -15,6 +15,8 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://dicemono.xyz',
       'https://dicemono.xyz',
+      'http://42library.kr',
+      'https://42library.kr',
     ],
     credentials: true,
   });
