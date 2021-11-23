@@ -195,7 +195,11 @@ export class ReservationsService {
       .leftJoinAndSelect('reservation.user', 'user')
       .leftJoinAndSelect('reservation.book', 'book')
       .leftJoinAndSelect('book.info', 'info')
-      .leftJoinAndSelect('book.lendings', 'lendings');
+      .leftJoinAndSelect(
+        'book.lendings',
+        'lendings',
+        'NOT EXISTS(SELECT * FROM returning where returning.lendingId = lendings.id)',
+      );
     if (!filter.includes('proceeding') && !filter.includes('finish')) {
       // 둘다 선택안했을 때
       queryBuilder = queryBuilder.where('reservation.id IS NULL'); //다시 확인

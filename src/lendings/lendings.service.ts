@@ -83,7 +83,7 @@ export class LendingsService {
     const reservationData = await this.reservationsService.getReservation(
       dto.bookId,
     );
-    if (reservationData != undefined && reservationData.book.id != dto.bookId)
+    if (reservationData != undefined && reservationData.user.id != dto.userId)
       throw new BadRequestException({
         errorCode: 3,
         message: ['예약된 책입니다.'],
