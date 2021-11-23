@@ -23,7 +23,12 @@ export class User {
 
   @Column()
   @Expose({
-    groups: ['lendings.search', 'lendings.findOne', 'reservations.search'],
+    groups: [
+      'lendings.search',
+      'lendings.findOne',
+      'reservations.search',
+      'users.search',
+    ],
   })
   login: string;
 
@@ -64,11 +69,11 @@ export class User {
   librarianLendings: Lending[];
 
   @OneToMany(() => Lending, (lending) => lending.user)
-  @Expose({ groups: [] })
+  @Expose({ groups: ['users.search'] })
   lendings: Lending[];
 
   @OneToMany(() => Reservation, (reservation) => reservation.user)
-  @Expose({ groups: [] })
+  @Expose({ groups: ['users.search'] })
   reservations: Reservation[];
 
   @Expose({ groups: ['users.search'] })
@@ -84,5 +89,15 @@ export class User {
     const today = new Date();
     if (penalty < today) return 0;
     return Math.ceil(Math.abs(+penalty - +today) / (1000 * 3600 * 24));
+  }
+
+  @Expose({
+    groups: ['users.search'],
+  })
+  get lendingCnt() {
+    if (!this.lendings) {
+      return 0;
+    }
+    return this.lendings.length;
   }
 }

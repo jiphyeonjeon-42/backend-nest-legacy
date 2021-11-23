@@ -51,6 +51,12 @@ export class BooksService {
     const queryBuilder = await this.booksRepository
       .createQueryBuilder('book')
       .leftJoinAndSelect('book.info', 'info')
+      .leftJoinAndSelect(
+        'book.lendings',
+        'lendings',
+        'NOT EXISTS(SELECT * FROM returning where returning.lendingId = lendings.id)',
+      )
+      .leftJoinAndSelect('lendings.returning', 'returning')
       .where('book.callSign like :query', { query: `%${query}%` })
       .orWhere('info.title like :query', { query: `%${query}%` })
       .orWhere('info.author like :query', { query: `%${query}%` })

@@ -73,7 +73,8 @@ export class Book {
   getDueDate() {
     if (this.lendings && this.lendings.length == 0) return '-';
     const lastLending = this.lendings.sort(
-      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     )[0];
     if (lastLending.returning) {
       return '-';
@@ -91,5 +92,15 @@ export class Book {
       return '비치 중';
     } else if (this.status == 1) return '분실';
     else if (this.status == 2) return '파손';
+  }
+
+  @Expose({ groups: ['books.searchBook'] })
+  get isLenderable() {
+    if (!this.lendings || this.lendings.length == 0) return true;
+    const lastLending = this.lendings.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )[0];
+    return !!lastLending.returning;
   }
 }

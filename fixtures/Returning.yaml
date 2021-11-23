@@ -2,7 +2,7 @@ entity: Returning
 items:
   returning1:
     lending: '@lending1'
-    user: '@user1'
+    user: '@librarian4'
     librarian: '@librarian*'
     condition: '문제 없음'
 

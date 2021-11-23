@@ -35,6 +35,7 @@ export class BookInfo {
       'lendings.search',
       'lendings.findOne',
       'reservations.search',
+      'users.search',
     ],
   })
   title: string;
@@ -104,6 +105,9 @@ export class BookInfo {
 
   @Expose({ name: 'publishedAt', groups: ['books.findOne', 'books.findInfo'] })
   getDate() {
+    if (!this.publishedAt) {
+      return null;
+    }
     const date = new Date(this.publishedAt);
     return date.getFullYear() + '년 ' + (date.getMonth() + 1) + '월';
   }
