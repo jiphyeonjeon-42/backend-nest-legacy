@@ -25,4 +25,11 @@ export default () => ({
   slack: {
     access_token: process.env.BOT_USER_OAUTH_ACCESS_TOKEN,
   },
+  airtable: {
+    apiKey: process.env.AIRTABLE_API_KEY,
+  },
+  admin: {
+    email: process.env.ADMIN_EMAIL,
+    password: process.env.ADMIN_PASSWORD,
+  },
 });

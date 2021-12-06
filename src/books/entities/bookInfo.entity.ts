@@ -5,6 +5,7 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  BaseEntity,
 } from 'typeorm';
 
 import { Book } from './book.entity';
@@ -22,7 +23,12 @@ export enum BookCategory {
 }
 
 @Entity()
-export class BookInfo {
+export class BookInfo extends BaseEntity {
+  constructor(bookInfo: Partial<BookInfo>) {
+    super();
+    Object.assign(this, bookInfo);
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -90,7 +96,7 @@ export class BookInfo {
   updatedAt: Date;
 
   @Expose({ groups: ['books.findOne'] })
-  @OneToMany(() => Book, (book) => book.info)
+  @OneToMany(() => Book, (book) => book.info, { cascade: true })
   books: Book[];
 
   @Expose({ name: 'donators', groups: ['books.findOne'] })

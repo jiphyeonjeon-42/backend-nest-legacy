@@ -29,10 +29,6 @@ async function loadFixtures(fixturesPath: string) {
     }
   } catch (err) {
     throw err;
-  } finally {
-    if (connection) {
-      await connection.close();
-    }
   }
 }
 

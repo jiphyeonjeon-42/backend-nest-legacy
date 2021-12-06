@@ -14,17 +14,6 @@ import { UsersService } from './users.service';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Post()
-  crate() {
-    return this.usersService.create();
-  }
-
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
-
   @SerializeOptions({ groups: ['users.search'] })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/search')
