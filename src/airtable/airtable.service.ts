@@ -74,7 +74,7 @@ export class AirtableService {
       bookInfo.books.push(
         new Book({
           donator: '',
-          callSign: `${bookInfo.id}${bookInfo.books.length}`,
+          callSign: `${bookInfo.books.length}`,
           status: 0,
         }),
       );
