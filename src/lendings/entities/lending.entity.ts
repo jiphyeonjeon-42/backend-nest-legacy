@@ -3,9 +3,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn,
+  RelationId,
   ManyToOne,
   OneToOne,
+  BaseEntity,
 } from 'typeorm';
 
 import { User } from '../../users/entities/user.entity';
@@ -14,8 +15,9 @@ import { Book } from '../../books/entities/book.entity';
 import { Expose } from 'class-transformer';
 
 @Entity()
-export class Lending {
+export class Lending extends BaseEntity {
   constructor(lending: Partial<Lending>) {
+    super();
     Object.assign(this, lending);
   }
 

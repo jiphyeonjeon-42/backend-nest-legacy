@@ -5,14 +5,16 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  BaseEntity,
 } from 'typeorm';
 
 import { User } from 'src/users/entities/user.entity';
 import { Book } from 'src/books/entities/book.entity';
 import { Expose } from 'class-transformer';
 @Entity()
-export class Reservation {
+export class Reservation extends BaseEntity {
   constructor(reservation: Partial<Reservation>) {
+    super();
     Object.assign(this, reservation);
   }
   @PrimaryGeneratedColumn()

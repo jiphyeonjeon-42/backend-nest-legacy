@@ -11,10 +11,12 @@ import { Returning } from '../../returnings/entities/returning.entity';
 import { Lending } from '../../lendings/entities/lending.entity';
 import { Reservation } from 'src/reservations/entities/reservation.entity';
 import { Expose } from 'class-transformer';
+import { BaseEntity } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
   constructor(user: Partial<User>) {
+    super();
     Object.assign(this, user);
   }
 

@@ -26,6 +26,9 @@ jobs:
           JWT_SECRET=${{ secrets.JWT_SECRET }}
           PORT=${{ secrets.PORT }}
           BOT_USER_OAUTH_ACCESS_TOKEN=${{ secrets.BOT_USER_OAUTH_ACCESS_TOKEN }}
+          ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
+          AIRTABLE_API_KEY=${{ secrets.AIRTABLE_API_KEY }}
           REDIRECT_URL=${{ secrets.REDIRECT_URL }}" > .env
  
       - name: install aws cli

@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-
+import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
+import { AxiosResponse } from 'axios';
+import { Observable } from 'rxjs';
 export interface tokenTypes {
   access_token: string;
   token_type: string;

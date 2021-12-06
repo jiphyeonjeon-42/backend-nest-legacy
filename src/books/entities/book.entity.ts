@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  BaseEntity,
 } from 'typeorm';
 
 import { BookInfo } from './bookInfo.entity';
@@ -14,8 +15,9 @@ import { Lending } from '../../lendings/entities/lending.entity';
 import { Expose } from 'class-transformer';
 
 @Entity()
-export class Book {
+export class Book extends BaseEntity {
   constructor(book: Partial<Book>) {
+    super();
     Object.assign(this, book);
   }
   @PrimaryGeneratedColumn()

@@ -21,6 +21,12 @@ import { SearchModule } from './search/search.module';
 import { SeedModule } from './seed/seed.module';
 import { SlackbotModule } from './slackbot/slackbot.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AirtableModule } from './airtable/airtable.module';
+import { AdminModule } from '@adminjs/nestjs';
+import { Database, Resource } from '@adminjs/typeorm';
+import AdminJS from 'adminjs';
+
+AdminJS.registerAdapter({ Database, Resource });
 
 @Module({
   imports: [
@@ -53,6 +59,28 @@ import { ScheduleModule } from '@nestjs/schedule';
     SeedModule,
     SlackbotModule,
     ScheduleModule.forRoot(),
+    AirtableModule,
+    AdminModule.createAdminAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        adminJsOptions: {
+          resources: [User, Returning, Lending, Book, BookInfo, Reservation],
+          rootPath: '/admin',
+        },
+        auth: {
+          authenticate: async (email, password) => {
+            if (
+              email === configService.get('admin.email') &&
+              password === configService.get('admin.password')
+            )
+              return Promise.resolve({ email: 'sejong' });
+          },
+          cookieName: 'test',
+          cookiePassword: 'testPass',
+        },
+      }),
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
