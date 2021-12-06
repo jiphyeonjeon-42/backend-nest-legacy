@@ -64,7 +64,7 @@ export class AirtableService {
   async migrateAirtablebooks(airtableBooks: AirtableBook[]) {
     const bookInfoMap: Map<string, BookInfo> = new Map();
     for (const airtableBook of airtableBooks) {
-      if (!bookInfoMap[airtableBook.fields.isbn]) {
+      if (!bookInfoMap.get(airtableBook.fields.isbn)) {
         airtableBook.fields = this.initAirtableFields(airtableBook.fields);
         const bookInfo = new BookInfo(airtableBook.fields);
         bookInfo.books = [];
@@ -74,7 +74,7 @@ export class AirtableService {
       bookInfo.books.push(
         new Book({
           donator: '',
-          callSign: `${bookInfo.isbn}${bookInfo.books.length}`,
+          callSign: `${bookInfo.id}${bookInfo.books.length}`,
           status: 0,
         }),
       );
@@ -91,6 +91,7 @@ export class AirtableService {
   private initAirtableFields(fields: AirtableBookFields) {
     if (fields.publishedAt) fields.publishedAt = new Date(fields.publishedAt);
     else fields.publishedAt = new Date();
+    if (!fields.author) fields.author = '';
     if (!fields.publisher) fields.publisher = '';
     if (!fields.image) fields.image = '';
     return fields;
