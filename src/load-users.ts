@@ -16,6 +16,8 @@ async function saveUsers(users: User[]) {
 
 async function getSlackUserMap(configService) {
   const slackClient = new WebClient(configService.get('slack.access_token'));
+  const userNameMap = new Map();
+  const userRealNameMap = new Map();
 
   let cursor;
   let users: any[] = [];
@@ -30,19 +32,26 @@ async function getSlackUserMap(configService) {
     }
   }
 
-  const userMap = new Map();
   for (const user of users) {
     const name = user['name'];
+    const realName = user['real_name'];
     const slackUserId = user['id'];
-    userMap[name] = slackUserId;
+    userNameMap.set(name, slackUserId);
+    userRealNameMap.set(realName, slackUserId);
   }
-  return userMap;
+  for (const item of userRealNameMap) {
+    const [realName, slackUserId] = item;
+    if (!userNameMap.get(realName)) {
+      userNameMap.set(realName, slackUserId);
+    }
+  }
+  return userNameMap;
 }
 
 async function createUserEntities(fortyTwoUsers: any[], slackUserMap) {
   const users = fortyTwoUsers.map((fortyTwoUser) => {
     const login = fortyTwoUser['login'];
-    const slack = slackUserMap[login];
+    const slack = slackUserMap.get(login);
     if (slack)
       return new User({
         login,
