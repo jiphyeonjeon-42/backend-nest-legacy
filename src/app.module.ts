@@ -116,7 +116,7 @@ AdminJS.registerAdapter({ Database, Resource });
               return Promise.resolve({ email: 'sejong' });
           },
           cookieName: 'adminAuth',
-          cookiePassword: 'testPass',
+          cookiePassword: configService.get('admin.cookieSecret'),
         },
       }),
     }),
