@@ -65,7 +65,46 @@ AdminJS.registerAdapter({ Database, Resource });
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         adminJsOptions: {
-          resources: [User, Returning, Lending, Book, BookInfo, Reservation],
+          resources: [
+            {
+              resource: Lending,
+              options: {
+                properties: {
+                  createdAt: {
+                    isVisible: true,
+                  },
+                },
+              },
+            },
+            {
+              resource: User,
+              options: {
+                properties: {
+                  login: { isTitle: true },
+                },
+              },
+            },
+            {
+              resource: Returning,
+              options: {
+                properties: {
+                  createdAt: {
+                    isVisible: true,
+                  },
+                },
+              },
+            },
+            {
+              resource: BookInfo,
+              options: {
+                properties: {
+                  title: { isTitle: true },
+                },
+              },
+            },
+            Book,
+            Reservation,
+          ],
           rootPath: '/admin',
         },
         auth: {
@@ -76,8 +115,8 @@ AdminJS.registerAdapter({ Database, Resource });
             )
               return Promise.resolve({ email: 'sejong' });
           },
-          cookieName: 'test',
-          cookiePassword: 'testPass',
+          cookieName: 'adminAuth',
+          cookiePassword: configService.get('admin.cookieSecret'),
         },
       }),
     }),

@@ -31,5 +31,6 @@ export default () => ({
   admin: {
     email: process.env.ADMIN_EMAIL,
     password: process.env.ADMIN_PASSWORD,
+    cookieSecret: process.env.ADMIN_COOKIE_SECRET,
   },
 });

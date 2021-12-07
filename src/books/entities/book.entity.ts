@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BaseEntity,
+  RelationId,
 } from 'typeorm';
 
 import { BookInfo } from './bookInfo.entity';
@@ -62,6 +63,10 @@ export class Book extends BaseEntity {
     ],
   })
   info: BookInfo;
+
+  @Column({ type: 'uuid' })
+  @RelationId((book: Book) => book.info)
+  infoId: number;
 
   @OneToMany(() => Reservation, (reservation) => reservation.book)
   @Expose({ groups: [] })
