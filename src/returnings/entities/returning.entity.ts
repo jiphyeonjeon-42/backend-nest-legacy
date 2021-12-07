@@ -8,6 +8,7 @@ import {
   OneToOne,
   JoinColumn,
   BaseEntity,
+  RelationId,
 } from 'typeorm';
 
 import { User } from '../../users/entities/user.entity';
@@ -41,11 +42,23 @@ export class Returning extends BaseEntity {
   @JoinColumn()
   lending: Lending;
 
+  @Column({ type: 'uuid' })
+  @RelationId((returning: Returning) => returning.user)
+  lendingId: number;
+
   @ManyToOne(() => User, (user) => user.returnings)
   @Expose({ groups: [] })
   user: User;
 
+  @Column({ type: 'uuid' })
+  @RelationId((lending: Lending) => lending.user)
+  userId: number;
+
   @ManyToOne(() => User, (librarian) => librarian.librarianReturnings)
   @Expose({ groups: [] })
   librarian: User;
+
+  @Column({ type: 'uuid' })
+  @RelationId((lending: Lending) => lending.user)
+  librarianId: number;
 }

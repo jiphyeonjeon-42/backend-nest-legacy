@@ -40,13 +40,25 @@ export class Lending extends BaseEntity {
   @ManyToOne(() => User, (user) => user.lendings, { nullable: false })
   user: User;
 
+  @Column({ type: 'uuid' })
+  @RelationId((lending: Lending) => lending.user)
+  userId: number;
+
   @ManyToOne(() => User, (librarian) => librarian.librarianLendings)
   @Expose({ groups: [] })
   librarian: User;
 
+  @Column({ type: 'uuid' })
+  @RelationId((lending: Lending) => lending.user)
+  librarianId: number;
+
   @Expose({ groups: ['lendings.search', 'lendings.findOne', 'users.search'] })
   @ManyToOne(() => Book, (book) => book.lendings, { nullable: false })
   book: Book;
+
+  @Column({ type: 'uuid' })
+  @RelationId((lending: Lending) => lending.user)
+  bookId: number;
 
   @OneToOne(() => Returning, (returning) => returning.lending)
   @Expose({ groups: ['users.search'] })
