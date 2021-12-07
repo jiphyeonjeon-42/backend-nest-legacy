@@ -43,7 +43,7 @@ export class Returning extends BaseEntity {
   lending: Lending;
 
   @Column({ type: 'uuid' })
-  @RelationId((returning: Returning) => returning.user)
+  @RelationId((returning: Returning) => returning.lending)
   lendingId: number;
 
   @ManyToOne(() => User, (user) => user.returnings)
@@ -51,7 +51,7 @@ export class Returning extends BaseEntity {
   user: User;
 
   @Column({ type: 'uuid' })
-  @RelationId((lending: Lending) => lending.user)
+  @RelationId((returning: Returning) => returning.user)
   userId: number;
 
   @ManyToOne(() => User, (librarian) => librarian.librarianReturnings)
@@ -59,6 +59,6 @@ export class Returning extends BaseEntity {
   librarian: User;
 
   @Column({ type: 'uuid' })
-  @RelationId((lending: Lending) => lending.user)
+  @RelationId((returning: Returning) => returning.librarian)
   librarianId: number;
 }

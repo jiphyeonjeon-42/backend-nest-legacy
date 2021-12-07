@@ -49,7 +49,7 @@ export class Lending extends BaseEntity {
   librarian: User;
 
   @Column({ type: 'uuid' })
-  @RelationId((lending: Lending) => lending.user)
+  @RelationId((lending: Lending) => lending.librarian)
   librarianId: number;
 
   @Expose({ groups: ['lendings.search', 'lendings.findOne', 'users.search'] })
@@ -57,7 +57,7 @@ export class Lending extends BaseEntity {
   book: Book;
 
   @Column({ type: 'uuid' })
-  @RelationId((lending: Lending) => lending.user)
+  @RelationId((lending: Lending) => lending.book)
   bookId: number;
 
   @OneToOne(() => Returning, (returning) => returning.lending)
