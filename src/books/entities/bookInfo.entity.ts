@@ -13,13 +13,22 @@ import { Expose } from 'class-transformer';
 
 export enum BookCategory {
   LANGUAGE = '프로그래밍 언어',
-  NETWORK = '네트워크',
   WEB_PROGRAMMING = '웹 프로그래밍',
-  GAME_MOBILE = '게임개발/모바일',
+  NETWORK = '네트워크',
+  GAME_MOBILE = '모바일 프로그래밍',
+  CLOUD = '클라우드',
+  DATABASE = '데이터베이스',
   OS_SYSTEM = '운영체제/컴퓨터시스템',
-  SOFTWARE_ENGINEERING = '소프트웨어 공학',
+  SOFTWARE_ENGINEERING = '개발방법론',
   ALGORITHM = '자료구조/알고리즘',
-  TECH_CULTURE = '기술 교양',
+  GAME = '게임',
+  DATA_AI_ML = '데이터 분석/AI/ML',
+  SECURITY = '보안/해킹/블록체인',
+  COMPUTER = '컴퓨터 개론',
+  DESIGN = '디자인/그래픽',
+  IT = 'IT 일반',
+  CERTIFICATE = '자격증',
+  NOT_DEVELOP = '비개발',
 }
 
 @Entity()
