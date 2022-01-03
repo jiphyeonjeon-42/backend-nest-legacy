@@ -81,6 +81,14 @@ export class BooksService {
     return bookData;
   }
 
+  async findInfoByBookId(bookId: number) {
+    const book = await this.booksRepository.findOne({
+      where: { id: bookId },
+      relations: ['info'],
+    });
+    return book.info;
+  }
+
   async findInfo(options: IPaginationOptions, sort: string) {
     let queryBuilder = this.bookInfosRepository.createQueryBuilder('bookInfo');
     if (sort === 'new') {
