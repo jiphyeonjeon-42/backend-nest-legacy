@@ -54,7 +54,7 @@ export class ReturningsService {
     if (reservationData != undefined) {
       await this.reservationsService.setEndAt(reservationData.id);
       const findUser = await this.userService.findOne(reservationData.user.id);
-      const { title } = await this.booksService.findOne(bookId);
+      const { title } = await this.booksService.findInfoByBookId(bookId);
       const message =
         '📖 예약 알리미 📖\n' +
         '`' +

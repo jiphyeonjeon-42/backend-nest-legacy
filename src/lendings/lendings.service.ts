@@ -102,7 +102,7 @@ export class LendingsService {
         book: { id: dto.bookId },
       });
       const findUser = await this.userService.findOne(dto.userId);
-      const { title } = await this.booksService.findOne(dto.bookId);
+      const { title } = await this.booksService.findInfoByBookId(dto.bookId);
       const now = new Date();
       const limitDay = new Date(
         now.setDate(now.getDate() + 14),
