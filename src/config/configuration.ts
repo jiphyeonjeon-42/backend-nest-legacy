@@ -33,4 +33,7 @@ export default () => ({
     password: process.env.ADMIN_PASSWORD,
     cookieSecret: process.env.ADMIN_COOKIE_SECRET,
   },
+  nationalLibrary: {
+    apiKey: process.env.NATIONAL_LIBRARY_API_KEY,
+  },
 });

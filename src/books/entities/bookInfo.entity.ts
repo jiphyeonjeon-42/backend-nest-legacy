@@ -12,7 +12,7 @@ import { Book } from './book.entity';
 import { Expose } from 'class-transformer';
 
 export enum BookCategory {
-  LANGUAGE = '프로그래밍 언어',
+  PROGRAMING_LANGUAGE = '프로그래밍 언어',
   WEB_PROGRAMMING = '웹 프로그래밍',
   NETWORK = '네트워크',
   GAME_MOBILE = '모바일 프로그래밍',
@@ -28,7 +28,19 @@ export enum BookCategory {
   DESIGN = '디자인/그래픽',
   IT = 'IT 일반',
   CERTIFICATE = '자격증',
+  GENERAL_WORK = '총류',
+  SOCIAL_SCIENCE = '사회과학',
+  ART = '예술',
+  TECHNOLOGICAL_SCIENCE = '기술과학',
+  LANGUAGE = '어학',
+  PURE_SCIENCE = '순수과학',
+  PHILOSOPHY = '철학',
+  NATURAL_SCIENCE = '자연과학',
+  HISTORY = '역사',
+  LITERATURE = '문학',
+  RELIGION = '종교',
   NOT_DEVELOP = '비개발',
+  NONE = '미정',
 }
 
 @Entity()

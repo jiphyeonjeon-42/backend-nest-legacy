@@ -8,6 +8,7 @@ import { SearchModule } from 'src/search/search.module';
 import { ReservationRepository } from 'src/reservations/reservations.repository';
 import { Reservation } from 'src/reservations/entities/reservation.entity';
 import { ReservationsModule } from 'src/reservations/reservations.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   controllers: [BooksController],
@@ -21,6 +22,7 @@ import { ReservationsModule } from 'src/reservations/reservations.module';
       Book,
     ]),
     SearchModule,
+    HttpModule,
   ],
   exports: [TypeOrmModule, BooksService],
 })

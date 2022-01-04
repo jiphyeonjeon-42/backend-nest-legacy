@@ -30,6 +30,7 @@ jobs:
           ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
           ADMIN_COOKIE_SECRET=${{ secrets.ADMIN_COOKIE_SECRET }}
           AIRTABLE_API_KEY=${{ secrets.AIRTABLE_API_KEY }}
+          NATIONAL_LIBRARY_API_KEY=${{ secrets.NATIONAL_LIBRARY_API_KEY }}
           REDIRECT_URL=${{ secrets.REDIRECT_URL }}" > .env
  
       - name: install aws cli

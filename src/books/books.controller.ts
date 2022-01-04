@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Param,
-  Delete,
   ParseIntPipe,
   Query,
   DefaultValuePipe,
@@ -11,10 +10,14 @@ import {
   ClassSerializerInterceptor,
   SerializeOptions,
   UseGuards,
+  Body,
+  Req,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ReservationsService } from 'src/reservations/reservations.service';
+import { CreateBookDto } from './dto/create-book.dto';
+import { CodeValidationPipe } from 'src/code-validation.pipe';
 
 @Controller('books')
 export class BooksController {
@@ -24,8 +27,11 @@ export class BooksController {
   ) {}
 
   @Post()
-  create() {
-    return this.booksService.create();
+  async create(
+    @Req() req,
+    @Body(new CodeValidationPipe()) createBookDto: CreateBookDto,
+  ) {
+    return this.booksService.create(createBookDto);
   }
 
   @Get('/info/search')
@@ -77,10 +83,5 @@ export class BooksController {
   async reservationWait(@Param('id') id: number) {
     const count = await this.reservationsService.bookCnt(id);
     return { count: count };
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.booksService.remove(+id);
   }
 }
