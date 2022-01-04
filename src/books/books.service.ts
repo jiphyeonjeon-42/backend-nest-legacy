@@ -1,11 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BookInfo } from './entities/bookInfo.entity';
+import { BookCategory, BookInfo } from './entities/bookInfo.entity';
 import { Book } from './entities/book.entity';
 import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { getConnection } from 'typeorm';
 import { SearchService } from 'src/search/search.service';
+import { HttpService } from '@nestjs/axios';
+import { lastValueFrom } from 'rxjs';
+import { CreateBookDto } from './dto/create-book.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class BooksService {
@@ -15,10 +23,56 @@ export class BooksService {
     @InjectRepository(Book)
     private booksRepository: Repository<Book>,
     private searchService: SearchService,
+    private httpService: HttpService,
+    private configService: ConfigService,
   ) {}
 
-  async create() {
-    return 'This action adds a new book';
+  async create(dto: CreateBookDto) {
+    let bookInfo = await this.bookInfosRepository
+      .createQueryBuilder('bookInfo')
+      .where('isbn = :isbn', { isbn: dto.isbn })
+      .getOne();
+    if (!bookInfo) {
+      const category = ((await this.getKdcNameByIsbn(dto.isbn)) ||
+        BookCategory.NONE) as BookCategory;
+      console.log(category);
+      try {
+        bookInfo = await this.bookInfosRepository
+          .create({
+            title: dto.title,
+            author: dto.author,
+            isbn: dto.isbn,
+            publisher: dto.publisher,
+            publishedAt: dto.publishedAt,
+            image: `https://image.kyobobook.co.kr/images/book/xlarge/${dto.isbn.slice(
+              -3,
+            )}/x${dto.isbn}.jpg`,
+            category,
+          })
+          .save();
+      } catch (e) {
+        throw new BadRequestException({
+          errorCode: 5,
+        });
+      }
+    }
+    try {
+      await this.booksRepository
+        .create({
+          info: {
+            id: bookInfo.id,
+          },
+          donator: '',
+          callSign: '',
+          status: 0,
+        })
+        .save();
+    } catch (e) {
+      console.error(e);
+      throw new BadRequestException({
+        errorCode: 5,
+      });
+    }
   }
 
   async search(
@@ -48,7 +102,7 @@ export class BooksService {
   }
 
   async searchBook(query: string, options: IPaginationOptions) {
-    const queryBuilder = await this.booksRepository
+    const queryBuilder = this.booksRepository
       .createQueryBuilder('book')
       .leftJoinAndSelect('book.info', 'info')
       .leftJoinAndSelect(
@@ -105,11 +159,22 @@ export class BooksService {
     return paginate(queryBuilder, options);
   }
 
-  async update(id: number) {
-    return `This action updates a #${id} book`;
-  }
-
-  async remove(id: number) {
-    return `This action removes a #${id} book`;
+  async getKdcNameByIsbn(isbn: string): Promise<string> {
+    const observable = this.httpService.get(
+      'https://www.nl.go.kr/NL/search/openApi/search.do',
+      {
+        params: {
+          key: this.configService.get('nationalLibrary.apiKey'),
+          apiType: 'json',
+          detailSearch: 'true',
+          isbnOp: 'isbn',
+          isbnCode: isbn,
+          pageSize: 1,
+        },
+      },
+    );
+    const response = await lastValueFrom(observable);
+    if (response.data['total'] == 0) return null;
+    return response.data['result'][0]['kdcName1s'];
   }
 }
