@@ -15,7 +15,7 @@ async function bootstrap() {
     .getMany();
 
   for (const bookInfo of bookInfos) {
-    if (bookInfo.category === BookCategory.WEB_PROGRAMMING) {
+    if (bookInfo.category === BookCategory.NOT_DEVELOP) {
       const category = (await booksService.getKdcNameByIsbn(
         bookInfo.isbn,
       )) as BookCategory;
