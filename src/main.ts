@@ -12,6 +12,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors({
     origin: [
+      'https://book.42library.kr',
       'http://localhost:3000',
       'http://dicemono.xyz',
       'https://dicemono.xyz',
